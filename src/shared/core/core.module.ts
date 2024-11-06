@@ -5,16 +5,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClsModule } from 'nestjs-cls';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule } from 'nestjs-i18n';
+import { TerminusModule } from '@nestjs/terminus';
 
 import { DateService } from './services/date.service';
-import { appConfig, databaseConfig, i18nConfig, logConfig } from './constants/config.constants';
+import { HealthService } from './services/health.service';
+import { appConfig, databaseConfig, healthConfig, localeConfig, logConfig } from './constants/config.constants';
+import { HealthController } from './controllers/health.controller';
 
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            load: [databaseConfig, appConfig, i18nConfig, logConfig],
+            load: [appConfig, healthConfig, databaseConfig, localeConfig, logConfig],
         }),
         TypeOrmModule.forRootAsync({
             inject: [ConfigService],
@@ -40,9 +43,13 @@ import { appConfig, databaseConfig, i18nConfig, logConfig } from './constants/co
                 { use: HeaderResolver, options: ['lang'] },
                 AcceptLanguageResolver,
             ],
-        })
+        }),
+        TerminusModule.forRoot({
+            logger: false,
+        }),
     ],
-    providers: [DateService],
+    controllers: [HealthController],
+    providers: [DateService, HealthService],
     exports: []
 })
 export class CoreModule {}

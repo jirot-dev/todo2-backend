@@ -5,7 +5,6 @@ import * as winston from 'winston';
 import { AVAILABLE_TRANSPORTS, LogTransportType } from '../types/app-logger.types';
 import { LogMetadata, TransportStatus } from '../interfaces/log.interface';
 import { TransportFactory } from '../transports/transport.factory';
-import { LogRepository } from '../repositories/log.repository';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class AppLogger implements LoggerService {
@@ -16,8 +15,7 @@ export class AppLogger implements LoggerService {
   private context?: string;
 
   constructor(
-    private configService: ConfigService,
-    private logRepository: LogRepository
+    private configService: ConfigService
   ) {
     this.initializeLogger();
   }
@@ -28,12 +26,9 @@ export class AppLogger implements LoggerService {
 
   private initializeLogger(): void {
     const logConfig = this.configService.get('log');
-    const env = this.configService.get('NODE_ENV');
     
     const transportFactory = new TransportFactory(
-      logConfig,
-      env,
-      this.logRepository
+      this.configService
     );
 
     AVAILABLE_TRANSPORTS.forEach(type => {

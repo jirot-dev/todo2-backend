@@ -1,4 +1,50 @@
 import { registerAs } from '@nestjs/config';
+import { DiskHealthConfig, HealthConfig } from '../interfaces/config.interface';
+
+
+export const appConfig = registerAs('app', () => ({
+  env: process.env.NODE_ENV,
+  name: process.env.APP_NAME || 'myapp',
+  version: process.env.APP_VERSION || '1.0',
+  port: parseInt(process.env.APP_PORT || '5000', 10),
+  cors: {
+    origin: (process.env.APP_CORS_ORIGINS || '*').split(','),
+  },
+  path: process.env.APP_PATH || 'api',
+  docPath: process.env.APP_DOC_PATH || 'api/docs'
+}));
+
+export const healthConfig = registerAs('health', (): HealthConfig => {
+  const parseDisksConfig = (disksJson: string): DiskHealthConfig[] => {
+    try {
+      const disks = JSON.parse(disksJson);
+      if (!Array.isArray(disks)) {
+        throw new Error('HEALTH_DISKS must be a JSON array');
+      }
+      
+      return disks.map((disk, index) => {
+        if (!disk.name || !disk.path || typeof disk.threshold !== 'number') {
+          throw new Error(`Invalid disk configuration at index ${index}`);
+        }
+        return {
+          name: disk.name,
+          path: disk.path,
+          threshold: disk.threshold
+        };
+      });
+    } catch (error) {
+      console.error('Error parsing HEALTH_DISKS:', error.message);
+      return [];  // Return empty array as fallback
+    }
+  };
+
+  return {
+    memoryHeap: parseInt(process.env.HEALTH_MEMORY_HEAP || '250', 10) * 1024 * 1024,
+    memoryRss: parseInt(process.env.HEALTH_MEMORY_RSS || '250', 10) * 1024 * 1024,
+    dbTimeout: parseInt(process.env.HEALTH_DB_TIMEOUT || '3000', 10),
+    disks: parseDisksConfig(process.env.HEALTH_DISKS || '[]'),
+  };
+});
 
 export const databaseConfig = registerAs('database', () => ({
   type: 'postgres',
@@ -11,16 +57,9 @@ export const databaseConfig = registerAs('database', () => ({
   synchronize: process.env.NODE_ENV !== 'production',
 }));
 
-export const appConfig = registerAs('app', () => ({
-  port: parseInt(process.env.APP_PORT, 10),
-  cors: {
-    origin: (process.env.APP_CORS_ORIGINS || '*').split(','),
-  }
-}));
-
-export const i18nConfig = registerAs('i18n', () => ({
-  defaultLocale: 'en',
-  locales: ['en', 'th'],
+export const localeConfig = registerAs('locale', () => ({
+  defaultLocale: process.env.LOCALE_DEFAULT || 'en',
+  locales:  (process.env.LOCALE_LIST || 'en').split(','),
 }));
 
 export const logConfig = registerAs('log', () => ({
@@ -30,40 +69,39 @@ export const logConfig = registerAs('log', () => ({
   },
   file: {
     enabled: process.env.LOGGER_FILE_ENABLED === 'true',
-    filename: process.env.LOGGER_FILE_FILENAME || 'logs/app-%DATE%.log',
+    fileName: process.env.LOGGER_FILE_FILENAME || 'logs/app-%DATE%.log',
     datePattern: process.env.LOGGER_FILE_DATE_PATTERN || 'YYYY-MM-DD',
     maxSize: process.env.LOGGER_FILE_MAX_SIZE || '20m',
     maxFiles: process.env.LOGGER_FILE_MAX_FILES || '7d',
   },
   db: {
     enabled: process.env.LOGGER_DB_ENABLED === 'true',
+    tableName: process.env.LOGGER_DB_TABLE_NAME || 'logs',
+    schema: process.env.LOGGER_DB_SCHEMA || 'public',
+    batchSize: parseInt(process.env.LOGGER_DB_BATCH_SIZE || '100', 10),
+    flushInterval: parseInt(process.env.LOGGER_DB_FLUSH_INTERVAL || '5000', 10)
   },
   logstash: {
     enabled: process.env.LOGGER_LOGSTASH_ENABLED === 'true',
     host: process.env.LOGGER_LOGSTASH_HOST || 'localhost',
     port: parseInt(process.env.LOGGER_LOGSTASH_PORT || '5000', 10),
-    applicationName: process.env.LOGGER_LOGSTASH_APP_NAME || 'myapp',
+    ssl: process.env.LOGGER_LOGSTASH_SSL || 'true' === 'true',
+    retries: parseInt(process.env.LOGGER_LOGSTASH_RETRIES || '-1', 10),
+    timeout: parseInt(process.env.LOGGER_LOGSTASH_TIMEOUT || '1000' , 10),
   },
   loki: {
     enabled: process.env.LOGGER_LOKI_ENABLED === 'true',
-    host: process.env.LOGGER_LOKI_HOST || 'http://localhost:3100',
-    labels: {
-      app: process.env.LOGGER_LOKI_APP_LABEL || 'myapp',
-      environment: process.env.NODE_ENV || 'development',
-    },
+    host: process.env.LOGGER_LOKI_HOST || 'http://localhost:3100'
   },
   fluentd: {
     enabled: process.env.LOGGER_FLUENTD_ENABLED === 'true',
     host: process.env.LOGGER_FLUENTD_HOST || 'localhost',
     port: parseInt(process.env.LOGGER_FLUENTD_PORT || '24224', 10),
-    tag: process.env.LOGGER_FLUENTD_TAG || 'myapp',
     timeout: parseFloat(process.env.LOGGER_FLUENTD_TIMEOUT || '3.0'),
-  },
+  }
 }));
 
 export const openTelemetryConfig = registerAs('otlp', () => ({
   enabled: process.env.OTLP_ENABLED === 'true',
-  endpoint: process.env.OTLP_ENDPOINT,
-  serviceName: process.env.OTLP_SERVICE_NAME || 'app',
-  serviceVersion: process.env.OTLP_SERVICE_VERSION || '1' 
+  endpoint: process.env.OTLP_ENDPOINT
 }));

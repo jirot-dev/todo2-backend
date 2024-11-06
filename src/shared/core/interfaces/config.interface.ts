@@ -1,3 +1,28 @@
+export interface AppConfig {
+  env: string;
+  name: string;
+  version: string;
+  port: number;
+  cors: {
+    origin: string[];
+  };
+  path: string;
+  docPath: string;
+}
+
+export interface DiskHealthConfig {
+    name: string;
+    path: string;
+    threshold: number;
+}
+
+export interface HealthConfig {
+    memoryHeap: number;
+    memoryRss: number;
+    dbTimeout: number;
+    disks: DiskHealthConfig[];
+}
+
 export interface DatabaseConfig {
     type: 'postgres';
     host: string;
@@ -7,61 +32,56 @@ export interface DatabaseConfig {
     database: string;
     autoLoadEntities: boolean;
     synchronize: boolean;
-  }
+} 
   
-  export interface AppConfig {
-    port: number;
-    cors: {
-      origin: string[];
-    };
-  }
-  
-  export interface I18nConfig {
+export interface LocaleConfig {
     defaultLocale: string;
     locales: string[];
-  }
+}
   
-  export interface LogConfig {
+export interface LogConfig {
     level: string;
     console: {
-      enabled: boolean;
+        enabled: boolean;
     };
     file: {
-      enabled: boolean;
-      filename: string;
-      datePattern: string;
-      maxSize: string;
-      maxFiles: string;
+        enabled: boolean;
+        fileName: string;
+        datePattern: string;
+        maxSize: string;
+        maxFiles: string;
     };
     db: {
-      enabled: boolean;
+        enabled: boolean;
+        tableName: string;
+        schema: string;
+        batchSize: number;
+        flushInterval: number;
     };
     logstash: {
-      enabled: boolean;
-      host: string;
-      port: number;
-      applicationName: string;
+        enabled: boolean;
+        host: string;
+        port: number;
+        ssl: boolean;
+        retries: number;
+        timeout: number;
     };
     loki: {
-      enabled: boolean;
-      host: string;
-      labels: {
-        app: string;
-        environment: string;
-      };
+        enabled: boolean;
+        host: string;
     };
     fluentd: {
-      enabled: boolean;
-      host: string;
-      port: number;
-      tag: string;
-      timeout: number;
+        enabled: boolean;
+        host: string;
+        port: number;
+        timeout: number;
     };
-  }
+}
 
-  export interface Config {
-    database: DatabaseConfig;
+export interface Config {
     app: AppConfig;
-    i18n: I18nConfig;
+    helath: HealthConfig;
+    database: DatabaseConfig;
+    locale: LocaleConfig;
     log: LogConfig;
-  }
+}
