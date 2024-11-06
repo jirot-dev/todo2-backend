@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { AppLogger } from './services/app-logger.logger';
+import { AppLogger } from './services/app-logger.service';
 
 
 @Module({

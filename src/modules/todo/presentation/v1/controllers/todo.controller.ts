@@ -1,8 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseInterceptors, Logger, ConsoleLogger } from '@nestjs/common';
-import { ClsService, ClsStore } from 'nestjs-cls';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { AppLogger } from 'src/shared/logging/services/app-logger.logger';
 import { ContextInterceptor } from 'src/shared/core/interceptors/context.interceptor';
 import { ErrorDto } from 'src/shared/error-handling/dtos/error.dto';
 import { CreateTodoCommand } from '../../../application/commands/create/create-todo.command';

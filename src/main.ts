@@ -4,7 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app.module';
-import { AppLogger } from './shared/logging/services/app-logger.logger';
+import { AppLogger } from './shared/logging/services/app-logger.service';
 import { AppConfig } from './shared/core/interfaces/config.interface';
 
 
