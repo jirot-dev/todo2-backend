@@ -84,10 +84,17 @@ export interface LogConfig {
     };
 }
 
+export interface OtlpConfig {
+    enabled: boolean;
+    tracingStart: boolean;
+    endpoint: boolean;
+}
+
 export interface Config {
     app: AppConfig;
     helath: HealthConfig;
     database: DatabaseConfig;
     locale: LocaleConfig;
     log: LogConfig;
+    otlp: OtlpConfig;
 }

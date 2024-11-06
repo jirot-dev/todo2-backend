@@ -13,10 +13,7 @@ import { CreateTodoDtoV1, UpdateTodoDtoV1, ListTodoQueryDtoV1, ResponseTodoDtoV1
 
 @ApiTags('Todo')
 @UseInterceptors(ContextInterceptor('Todo'))
-@Controller({
-  version: '1',
-  path: 'todo'
-})
+@Controller({ version: '1', path: 'todo' })
 export class TodoControllerV1 {
   private logger = new Logger(TodoControllerV1.name);
 

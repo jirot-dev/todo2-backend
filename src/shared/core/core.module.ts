@@ -8,16 +8,16 @@ import { AcceptLanguageResolver, HeaderResolver, I18nModule } from 'nestjs-i18n'
 import { TerminusModule } from '@nestjs/terminus';
 
 import { DateService } from './services/date.service';
-import { HealthService } from './services/health.service';
-import { appConfig, databaseConfig, healthConfig, localeConfig, logConfig } from './constants/config.constants';
+import { appConfig, databaseConfig, healthConfig, localeConfig, logConfig, otlpConfig } from './constants/config.constants';
 import { HealthController } from './controllers/health.controller';
+import { HealthService } from './services/health.service';
 
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            load: [appConfig, healthConfig, databaseConfig, localeConfig, logConfig],
+            load: [appConfig, healthConfig, databaseConfig, localeConfig, logConfig, otlpConfig],
         }),
         TypeOrmModule.forRootAsync({
             inject: [ConfigService],

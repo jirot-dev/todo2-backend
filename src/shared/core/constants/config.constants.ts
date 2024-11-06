@@ -107,7 +107,8 @@ export const logConfig = registerAs('log', () => ({
   }
 }));
 
-export const openTelemetryConfig = registerAs('otlp', () => ({
+export const otlpConfig = registerAs('otlp', () => ({
   enabled: process.env.OTLP_ENABLED === 'true',
+  tracingStart: process.env.OTLP_TRACING_START === 'true',
   endpoint: process.env.OTLP_ENDPOINT
 }));
