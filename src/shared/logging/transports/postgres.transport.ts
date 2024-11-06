@@ -32,10 +32,10 @@ export class PostgresTransport extends Transport {
     };
 
     this.pool = new Pool(poolConfig);
-    this.tableName = logConfig.db.tableName;
-    this.schema = logConfig.db.schema;
-    this.batchSize = logConfig.db.batchSize;
-    this.flushInterval = logConfig.db.flushInterval;
+    this.tableName = logConfig.database.tableName;
+    this.schema = logConfig.database.schema;
+    this.batchSize = logConfig.database.batchSize;
+    this.flushInterval = logConfig.database.flushInterval;
 
     this.initializeTable().catch(err => {
       console.error('Failed to initialize logging table:', err);

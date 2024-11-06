@@ -43,16 +43,19 @@ export interface LogConfig {
     level: string;
     console: {
         enabled: boolean;
+        start: boolean;
     };
     file: {
         enabled: boolean;
+        start: boolean;
         fileName: string;
         datePattern: string;
         maxSize: string;
         maxFiles: string;
     };
-    db: {
+    database: {
         enabled: boolean;
+        start: boolean;
         tableName: string;
         schema: string;
         batchSize: number;
@@ -60,6 +63,7 @@ export interface LogConfig {
     };
     logstash: {
         enabled: boolean;
+        start: boolean;
         host: string;
         port: number;
         ssl: boolean;
@@ -68,10 +72,12 @@ export interface LogConfig {
     };
     loki: {
         enabled: boolean;
+        start: boolean;
         host: string;
     };
     fluentd: {
         enabled: boolean;
+        start: boolean;
         host: string;
         port: number;
         timeout: number;

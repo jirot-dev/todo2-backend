@@ -65,36 +65,42 @@ export const localeConfig = registerAs('locale', () => ({
 export const logConfig = registerAs('log', () => ({
   level: process.env.LOG_LEVEL,
   console: {
-    enabled: process.env.LOGGER_CONSOLE_ENABLED === 'true',
+    enabled: (process.env.LOGGER_CONSOLE_ENABLED || 'true') === 'true',
+    start: (process.env.LOGGER_CONSOLE_START || 'true') === 'true',
   },
   file: {
-    enabled: process.env.LOGGER_FILE_ENABLED === 'true',
+    enabled: (process.env.LOGGER_FILE_ENABLED || 'false') === 'true',
+    start: (process.env.LOGGER_FILE_START || 'true') === 'true',
     fileName: process.env.LOGGER_FILE_FILENAME || 'logs/app-%DATE%.log',
     datePattern: process.env.LOGGER_FILE_DATE_PATTERN || 'YYYY-MM-DD',
     maxSize: process.env.LOGGER_FILE_MAX_SIZE || '20m',
     maxFiles: process.env.LOGGER_FILE_MAX_FILES || '7d',
   },
-  db: {
-    enabled: process.env.LOGGER_DB_ENABLED === 'true',
+  database: {
+    enabled: (process.env.LOGGER_DB_ENABLED || 'false') === 'true',
+    start: (process.env.LOGGER_DB_START || 'true') === 'true',
     tableName: process.env.LOGGER_DB_TABLE_NAME || 'logs',
     schema: process.env.LOGGER_DB_SCHEMA || 'public',
     batchSize: parseInt(process.env.LOGGER_DB_BATCH_SIZE || '100', 10),
     flushInterval: parseInt(process.env.LOGGER_DB_FLUSH_INTERVAL || '5000', 10)
   },
   logstash: {
-    enabled: process.env.LOGGER_LOGSTASH_ENABLED === 'true',
+    enabled: (process.env.LOGGER_LOGSTASH_ENABLED || 'false') === 'true',
+    start: (process.env.LOGGER_LOGSTASH_START || 'true') === 'true',
     host: process.env.LOGGER_LOGSTASH_HOST || 'localhost',
     port: parseInt(process.env.LOGGER_LOGSTASH_PORT || '5000', 10),
-    ssl: process.env.LOGGER_LOGSTASH_SSL || 'true' === 'true',
+    ssl: (process.env.LOGGER_LOGSTASH_SSL || 'true') === 'true',
     retries: parseInt(process.env.LOGGER_LOGSTASH_RETRIES || '-1', 10),
     timeout: parseInt(process.env.LOGGER_LOGSTASH_TIMEOUT || '1000' , 10),
   },
   loki: {
-    enabled: process.env.LOGGER_LOKI_ENABLED === 'true',
+    enabled: (process.env.LOGGER_LOKI_ENABLED || 'false') === 'true',
+    start: (process.env.LOGGER_LOKI_START || 'true') === 'true',
     host: process.env.LOGGER_LOKI_HOST || 'http://localhost:3100'
   },
   fluentd: {
-    enabled: process.env.LOGGER_FLUENTD_ENABLED === 'true',
+    enabled: (process.env.LOGGER_FLUENTD_ENABLED || 'false') === 'true',
+    start: (process.env.LOGGER_FLUENTD_START || 'true') === 'true',
     host: process.env.LOGGER_FLUENTD_HOST || 'localhost',
     port: parseInt(process.env.LOGGER_FLUENTD_PORT || '24224', 10),
     timeout: parseFloat(process.env.LOGGER_FLUENTD_TIMEOUT || '3.0'),

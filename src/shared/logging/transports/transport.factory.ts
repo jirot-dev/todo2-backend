@@ -2,7 +2,6 @@ import * as winston from 'winston';
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 import { PostgresTransport } from './postgres.transport';
-//import { LogEntity } from '../entities/log.entity';
 import { LogTransportType } from '../types/app-logger.types';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig, DatabaseConfig, LogConfig } from 'src/shared/core/interfaces/config.interface';
@@ -77,7 +76,7 @@ export class TransportFactory {
   }
 
   private createDatabaseTransport(): winston.transport | null {
-    if (!this.logConfig.db.enabled) return null;
+    if (!this.logConfig.database.enabled) return null;
 
     const databaseConfig: DatabaseConfig = this.configService.get('database');
     return new PostgresTransport(this.logConfig, databaseConfig);

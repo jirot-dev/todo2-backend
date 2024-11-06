@@ -10,8 +10,7 @@ import { TransportFactory } from '../transports/transport.factory';
 export class AppLogger implements LoggerService {
   private winstonLogger: winston.Logger;
   private transports: Map<LogTransportType, winston.transport> = new Map();
-  private transportEnabled: Map<LogTransportType, boolean> = new Map();
-  private transportActive: Map<LogTransportType, boolean> = new Map();
+  private runningTransports: Set<LogTransportType> = new Set();
   private context?: string;
 
   constructor(
@@ -26,27 +25,22 @@ export class AppLogger implements LoggerService {
 
   private initializeLogger(): void {
     const logConfig = this.configService.get('log');
+    const transportFactory = new TransportFactory(this.configService);
+
+    // Initialize enabled transports
+    const activeTransports: winston.transport[] = [];
     
-    const transportFactory = new TransportFactory(
-      this.configService
-    );
-
     AVAILABLE_TRANSPORTS.forEach(type => {
-      this.transportEnabled.set(type, false);
-      this.transportActive.set(type, false);
-    });
-
-    const transports = AVAILABLE_TRANSPORTS
-      .map(type => {
-        const transport = transportFactory.createTransport(type);
-        if (transport) {
-          this.transports.set(type, transport);
-          this.transportEnabled.set(type, true);
-          this.transportActive.set(type, true);
+      const transport = transportFactory.createTransport(type);
+      if (transport) {
+        this.transports.set(type, transport);
+        // Check if transport should start automatically
+        if (logConfig[type].start !== false) {
+          activeTransports.push(transport);
+          this.runningTransports.add(type);
         }
-        return transport;
-      })
-      .filter((transport): transport is winston.transport => transport !== null);
+      }
+    });
 
     this.winstonLogger = winston.createLogger({
       level: logConfig.level || 'info',
@@ -54,7 +48,7 @@ export class AppLogger implements LoggerService {
         winston.format.timestamp(),
         winston.format.json()
       ),
-      transports,
+      transports: activeTransports,
     });
   }
 
@@ -104,32 +98,37 @@ export class AppLogger implements LoggerService {
     return this.winstonLogger.level;
   }
   
-  getTransportStatus(type: LogTransportType): TransportStatus {
+  getTransportStatus(type: LogTransportType): TransportStatus | null {
     const transport = this.transports.get(type);
-    const enabled = this.transportEnabled.get(type) || false;
-    const active = this.transportActive.get(type) || false;
+    if (!transport) return null;
 
     return {
-      enabled,
-      active,
-      level: transport?.level || this.winstonLogger.level,
+      enabled: true, // If it's in transports Map, it's enabled
+      active: this.runningTransports.has(type),
+      level: transport.level || this.winstonLogger.level,
       type
     };
   }
 
-  enableTransport(type: LogTransportType): void {
+  startTransport(type: LogTransportType): void {
     const transport = this.transports.get(type);
-    if (transport && this.transportEnabled.get(type)) {
+    if (transport && !this.runningTransports.has(type)) {
       this.winstonLogger.add(transport);
-      this.transportActive.set(type, true);
+      this.runningTransports.add(type);
     }
   }
 
-  disableTransport(type: LogTransportType): void {
+  stopTransport(type: LogTransportType): void {
     const transport = this.transports.get(type);
-    if (transport) {
+    if (transport && this.runningTransports.has(type)) {
       this.winstonLogger.remove(transport);
-      this.transportActive.set(type, false);
+      this.runningTransports.delete(type);
     }
+  }
+
+  getAllTransportStatus(): TransportStatus[] {
+    return Array.from(this.transports.keys())
+      .map(type => this.getTransportStatus(type))
+      .filter((status): status is TransportStatus => status !== null);
   }
 }
