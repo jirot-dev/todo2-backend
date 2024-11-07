@@ -84,10 +84,12 @@ export interface LogConfig {
     };
 }
 
-export interface OtlpConfig {
+export interface OtelConfig {
     enabled: boolean;
     tracingStart: boolean;
-    endpoint: boolean;
+    endpoint: string;
+    authHeader: string;
+    authKey: string;
 }
 
 export interface Config {
@@ -96,5 +98,5 @@ export interface Config {
     database: DatabaseConfig;
     locale: LocaleConfig;
     log: LogConfig;
-    otlp: OtlpConfig;
+    otel: OtelConfig;
 }

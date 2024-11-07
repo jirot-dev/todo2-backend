@@ -107,8 +107,10 @@ export const logConfig = registerAs('log', () => ({
   }
 }));
 
-export const otlpConfig = registerAs('otlp', () => ({
-  enabled: process.env.OTLP_ENABLED === 'true',
-  tracingStart: process.env.OTLP_TRACING_START === 'true',
-  endpoint: process.env.OTLP_ENDPOINT
+export const otelConfig = registerAs('otel', () => ({
+  enabled: process.env.OTEL_ENABLED === 'true',
+  tracingStart: process.env.OTEL_TRACING_START === 'true',
+  endpoint: process.env.OTEL_ENDPOINT,
+  authHeader: process.env.OTEL_AUTH_HEADER,
+  authKey: process.env.OTEL_AUTH_KEY
 }));

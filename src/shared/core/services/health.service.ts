@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmHealthIndicator, MemoryHealthIndicator, DiskHealthIndicator, HealthIndicatorResult } from '@nestjs/terminus';
-import { HealthConfig, DiskHealthConfig } from '../interfaces/config.interface';
+import { HealthConfig, DiskHealthConfig } from 'src/shared/config/interfaces/config.interface';
 import * as fs from 'fs';
 import * as path from 'path';
 

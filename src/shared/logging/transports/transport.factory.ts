@@ -4,7 +4,7 @@ import * as DailyRotateFile from 'winston-daily-rotate-file';
 import { PostgresTransport } from './postgres.transport';
 import { LogTransportType } from '../types/app-logger.types';
 import { ConfigService } from '@nestjs/config';
-import { AppConfig, DatabaseConfig, LogConfig } from 'src/shared/core/interfaces/config.interface';
+import { AppConfig, DatabaseConfig, LogConfig } from 'src/shared/config/interfaces/config.interface';
 /*
 import * as WinstonLoki from 'winston-loki';
 import * as WinstonLogstash from 'winston-logstash-transport';

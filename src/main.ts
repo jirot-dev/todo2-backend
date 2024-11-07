@@ -1,21 +1,28 @@
+import { ConfigService } from '@nestjs/config';
+import { otelSDK } from './tracer';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
+
 
 import { AppModule } from './app.module';
 import { AppLogger } from './shared/logging/services/app-logger.service';
-import { AppConfig } from './shared/core/interfaces/config.interface';
+import { AppConfig } from './shared/config/interfaces/config.interface';
 
 
 async function bootstrap() {
+  
+  
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true
   });
 
+  
+  const configService: ConfigService = app.get(ConfigService);
+  await otelSDK.start();
+
   app.use(helmet());
 
-  const configService: ConfigService = app.get(ConfigService);
   const appConfig: AppConfig = configService.get('app');
 
   app.setGlobalPrefix(appConfig.path);
