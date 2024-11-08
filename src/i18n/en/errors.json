@@ -1,0 +1,13 @@
+{
+  "internal": "An internal server error occurred. Please try again later",
+  "database": "A database error occurred. Please try again later",
+  "aggregate": "Multiple validation errors occurred",
+  "item": {
+    "notFound": "{resource} with ID {id} was not found"
+  },
+  "field": {
+    "required": "The {field} field is required",
+    "length": "The {field} must not exceed {max} characters",
+    "range": "The {field} must be between {min} and {max}"
+  }
+}

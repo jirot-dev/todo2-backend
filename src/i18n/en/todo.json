@@ -1,9 +1,0 @@
-
-{
-    "errors": {
-      "emptyTitle": "Title cannot be empty",
-      "detailTooLong": "Detail cannot exceed {{max}} characters",
-      "invalidProgress": "Progress must be between {{min}} and {{max}}",
-      "todoNotFound": "Todo with ID {{id}} not found"
-    }
-  }

@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseInterceptors, Logger, ConsoleLogger } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiBody } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { OtelMethodCounter, Span } from 'nestjs-otel';
 
@@ -26,6 +26,11 @@ export class TodoControllerV1 {
 
   @Span()
   @OtelMethodCounter()
+  @ApiOperation({operationId: 'listTodos'})
+  @ApiQuery({ type: ListTodoQueryDtoV1 })
+  @ApiResponse({ status: 200, type: ResponseTodoDtoV1, isArray: true })
+  @ApiResponse({ status: 400, type: ErrorDto })
+  @ApiResponse({ status: 500, type: ErrorDto })
   @Get()
   async list(@Query() query: ListTodoQueryDtoV1) {
     this.logger.log('test');
@@ -37,17 +42,25 @@ export class TodoControllerV1 {
 
   @Span()
   @OtelMethodCounter()
+  @ApiOperation({operationId: 'getTodo'})
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiResponse({ status: 200, type: ResponseTodoDtoV1 })
+  @ApiResponse({ status: 400, type: ErrorDto })
+  @ApiResponse({ status: 404, type: ErrorDto })
+  @ApiResponse({ status: 500, type: ErrorDto })
   @Get(':id')
   async get(@Param('id') id: number) {
     const todo = await this.queryBus.execute(new GetTodoQuery(id));
     return ResponseTodoDtoV1.fromDomain(todo);
   }
 
+  @Span()
+  @OtelMethodCounter()
+  @ApiOperation({operationId: 'createTodo'})
+  @ApiBody({ type: CreateTodoDtoV1 })
   @ApiResponse({ status: 201, type: ResponseTodoDtoV1 })
   @ApiResponse({ status: 400, type: ErrorDto })
   @ApiResponse({ status: 500, type: ErrorDto })
-  @Span()
-  @OtelMethodCounter()
   @Post()
   async create(@Body() dto: CreateTodoDtoV1) {
     const command = new CreateTodoCommand(
@@ -62,12 +75,14 @@ export class TodoControllerV1 {
     return ResponseTodoDtoV1.fromDomain(todo);
   }
 
+  @Span()
+  @OtelMethodCounter()
+  @ApiOperation({operationId: 'updateTodo'})
+  @ApiBody({ type: UpdateTodoDtoV1 })
   @ApiResponse({ status: 201, type: ResponseTodoDtoV1 })
   @ApiResponse({ status: 400, type: ErrorDto })
   @ApiResponse({ status: 404, type: ErrorDto })
   @ApiResponse({ status: 500, type: ErrorDto })
-  @Span()
-  @OtelMethodCounter()
   @Put(':id')
   async update(@Param('id') id: number, @Body() dto: UpdateTodoDtoV1) {
     const command = new UpdateTodoCommand(
@@ -85,6 +100,8 @@ export class TodoControllerV1 {
 
   @Span()
   @OtelMethodCounter()
+  @ApiOperation({operationId: 'deleteTodo'})
+  @ApiParam({ name: 'id', type: 'number' })
   @Delete(':id')
   async delete(@Param('id') id: number) {
     const command = new DeleteTodoCommand(id);

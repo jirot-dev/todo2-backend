@@ -77,17 +77,40 @@ export class ListTodoQueryDtoV1 {
 }
 
 export class ResponseTodoDtoV1 {
+  @ApiProperty()
   readonly id: number;
+
+  @ApiProperty()
   readonly title: string;
+
+  @ApiProperty()
   readonly detail: string | null;
+
+  @ApiProperty()
   readonly progress: number;
+
+  @ApiProperty()
   readonly startDate: Date | null;
+
+  @ApiProperty()
   readonly endDate: Date | null;
+
+  @ApiProperty()
   readonly status: TodoStatus;
+
+  @ApiProperty()
   readonly dueDate: Date | null;
+
+  @ApiProperty()
   readonly priority: TodoPriority;
+
+  @ApiProperty()
   readonly position: number | null;
+
+  @ApiProperty()
   readonly createdDate: Date;
+
+  @ApiProperty()
   readonly modifiedDate: Date;
 
   static fromDomain(domain: Todo): ResponseTodoDtoV1 {

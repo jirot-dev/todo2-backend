@@ -55,6 +55,7 @@ export class ErrorDtoBuilder {
   }
 
   setMessage(message: string): this {
+    console.log(message);
     this.response.message = message;
     return this;
   }

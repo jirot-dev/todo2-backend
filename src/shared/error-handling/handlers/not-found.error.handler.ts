@@ -14,7 +14,9 @@ export class NotFoundErrorHandler implements ErrorHandler {
   handle(error: NotFoundError, request: any, i18nService: I18nService, cls: ClsService<ClsStore>): ErrorDto {
     const resource = cls.get('resource');
     const resourceId = cls.get('resourceId');
-
+console.log(resource);
+console.log(resourceId);
+console.log(request.i18nLang);
     return new ErrorDtoBuilder(request.url)
       .setStatus(HttpStatus.NOT_FOUND)
       .setMessage(i18nService.translate(error.messageKey, {
