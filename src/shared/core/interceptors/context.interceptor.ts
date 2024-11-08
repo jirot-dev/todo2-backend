@@ -6,7 +6,7 @@ import { AppClsStore } from '../interfaces/app-cls-store.interface';
 export function ContextInterceptor(resource?: string): Type<NestInterceptor> {
     @Injectable()
     class MixinContextInterceptor implements NestInterceptor {
-        constructor(public readonly cls: ClsService<AppClsStore>) {}
+        constructor(public readonly cls: ClsService<AppClsStore>) { }
 
         intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
             const request = context.switchToHttp().getRequest();
@@ -16,10 +16,10 @@ export function ContextInterceptor(resource?: string): Type<NestInterceptor> {
             if (resource) {
                 this.cls.set('resource', resource);
             }
-            
+
             this.cls.set('resourceId', id);
             this.cls.set('language', request.headers['accept-language']);
-            
+
             if (request.user) {
                 this.cls.set('userId', request.user.id);
             }

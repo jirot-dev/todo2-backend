@@ -24,15 +24,15 @@ import { HealthService } from './services/health.service';
                 mount: true,
                 generateId: true,
                 idGenerator: (req: Request) => {
-                return req.headers['x-correlation-id'] || uuidv4();
+                    return req.headers['x-correlation-id'] || uuidv4();
                 },
             },
         }),
         I18nModule.forRoot({
             fallbackLanguage: 'en',
             loaderOptions: {
-            path: path.join(__dirname, '../../i18n/'),
-            watch: true,
+                path: path.join(__dirname, '../../i18n/'),
+                watch: true,
             },
             resolvers: [
                 { use: HeaderResolver, options: ['lang'] },
@@ -47,4 +47,4 @@ import { HealthService } from './services/health.service';
     providers: [DateService, HealthService],
     exports: []
 })
-export class CoreModule {}
+export class CoreModule { }

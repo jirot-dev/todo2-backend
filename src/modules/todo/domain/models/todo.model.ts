@@ -171,7 +171,7 @@ export class Todo {
         if (this.status !== TodoStatus.NOT_START && !this.startDate) {
             this.startDate = nowUtc;
         }
-        
+
         if (this.status === TodoStatus.FINISHED && !this.endDate) {
             this.endDate = nowUtc;
         }

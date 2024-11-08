@@ -21,7 +21,7 @@ export const healthConfig = registerAs('health', (): HealthConfig => {
       if (!Array.isArray(disks)) {
         throw new Error('HEALTH_DISKS must be a JSON array');
       }
-      
+
       return disks.map((disk, index) => {
         if (!disk.name || !disk.path || typeof disk.threshold !== 'number') {
           throw new Error(`Invalid disk configuration at index ${index}`);
@@ -59,7 +59,7 @@ export const databaseConfig = registerAs('database', () => ({
 
 export const localeConfig = registerAs('locale', () => ({
   defaultLocale: process.env.LOCALE_DEFAULT || 'en',
-  locales:  (process.env.LOCALE_LIST || 'en').split(','),
+  locales: (process.env.LOCALE_LIST || 'en').split(','),
 }));
 
 export const logConfig = registerAs('log', () => ({
@@ -91,7 +91,7 @@ export const logConfig = registerAs('log', () => ({
     port: parseInt(process.env.LOGGER_LOGSTASH_PORT || '5000', 10),
     ssl: (process.env.LOGGER_LOGSTASH_SSL || 'true') === 'true',
     retries: parseInt(process.env.LOGGER_LOGSTASH_RETRIES || '-1', 10),
-    timeout: parseInt(process.env.LOGGER_LOGSTASH_TIMEOUT || '1000' , 10),
+    timeout: parseInt(process.env.LOGGER_LOGSTASH_TIMEOUT || '1000', 10),
   },
   loki: {
     enabled: (process.env.LOGGER_LOKI_ENABLED || 'false') === 'true',

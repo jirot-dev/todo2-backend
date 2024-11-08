@@ -9,4 +9,4 @@ import { TodoModule } from './modules/todo/todo.module';
     TodoModule
   ]
 })
-export class AppModule {}
+export class AppModule { }

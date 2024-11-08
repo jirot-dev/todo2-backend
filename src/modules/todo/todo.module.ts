@@ -30,4 +30,4 @@ import { TodoControllerV1 } from './presentation/v1/controllers/todo.controller'
   ],
   exports: [],
 })
-export class TodoModule {}
+export class TodoModule { }

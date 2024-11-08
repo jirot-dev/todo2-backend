@@ -53,23 +53,26 @@ export class ListTodoQueryDtoV1 {
   })
   status?: TodoStatus;
 
-  @ApiProperty({ 
-    enum: TodoOrder, 
+  @ApiProperty({
+    enum: TodoOrder,
     enumName: 'TodoOrder',
-    required: false, 
-    default: TodoOrder.CREATED_DATE })
+    required: false,
+    default: TodoOrder.CREATED_DATE
+  })
   orderBy?: TodoOrder = TodoOrder.CREATED_DATE;
 
-  @ApiProperty({ 
-    type: Number, 
-    required: false, 
-    default: 1 })
+  @ApiProperty({
+    type: Number,
+    required: false,
+    default: 1
+  })
   page?: number = 1;
 
-  @ApiProperty({ 
-    type: Number, 
-    required: false, 
-    default: 10 })
+  @ApiProperty({
+    type: Number,
+    required: false,
+    default: 10
+  })
   pageSize?: number = 10;
 }
 
@@ -88,19 +91,19 @@ export class ResponseTodoDtoV1 {
   readonly modifiedDate: Date;
 
   static fromDomain(domain: Todo): ResponseTodoDtoV1 {
-      return {
-          id: domain.id,
-          title: domain.title,
-          detail: domain.detail,
-          progress: domain.progress,
-          startDate: domain.startDate,
-          endDate: domain.endDate,
-          status: domain.status,
-          dueDate: domain.dueDate,
-          priority: domain.priority,
-          position: domain.position,
-          createdDate: domain.createdDate,
-          modifiedDate: domain.modifiedDate
-      };
+    return {
+      id: domain.id,
+      title: domain.title,
+      detail: domain.detail,
+      progress: domain.progress,
+      startDate: domain.startDate,
+      endDate: domain.endDate,
+      status: domain.status,
+      dueDate: domain.dueDate,
+      priority: domain.priority,
+      position: domain.position,
+      createdDate: domain.createdDate,
+      modifiedDate: domain.modifiedDate
+    };
   }
 }

@@ -11,4 +11,4 @@ export interface TransportStatus {
     active: boolean;
     level: string;
     type: LogTransportType;
-  }
+}

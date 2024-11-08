@@ -47,8 +47,8 @@ export class HealthService {
 
   async checkDatabase(): Promise<HealthIndicatorResult> {
     try {
-      return await this.typeOrm.pingCheck('database', { 
-        timeout: this.config.dbTimeout 
+      return await this.typeOrm.pingCheck('database', {
+        timeout: this.config.dbTimeout
       });
     } catch (error) {
       this.logger.error(`Database check failed: ${error.message}`);
@@ -72,7 +72,7 @@ export class HealthService {
       const diskChecks = await Promise.all(
         this.config.disks.map(diskConfig => this.checkSingleDisk(diskConfig))
       );
-      
+
       return diskChecks.reduce((acc, curr) => ({ ...acc, ...curr }), {});
     } catch (error) {
       this.logger.error(`Disk checks failed: ${error.message}`);
@@ -82,12 +82,12 @@ export class HealthService {
 
   private async checkSingleDisk(diskConfig: DiskHealthConfig): Promise<HealthIndicatorResult> {
     const normalizedPath = path.normalize(diskConfig.path);
-    
+
     try {
       // Check if path exists before attempting health check
       if (!fs.existsSync(normalizedPath)) {
         return this.createErrorResponse(
-          diskConfig.name, 
+          diskConfig.name,
           `Path not found: ${normalizedPath}`
         );
       }
@@ -97,7 +97,7 @@ export class HealthService {
         await fs.promises.access(normalizedPath, fs.constants.R_OK);
       } catch {
         return this.createErrorResponse(
-          diskConfig.name, 
+          diskConfig.name,
           `Path not accessible: ${normalizedPath}`
         );
       }
@@ -110,9 +110,9 @@ export class HealthService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Disk check failed for ${normalizedPath}: ${errorMessage}`);
-      
+
       return this.createErrorResponse(
-        diskConfig.name, 
+        diskConfig.name,
         `Check failed for ${normalizedPath}: ${errorMessage}`
       );
     }

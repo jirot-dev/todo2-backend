@@ -12,7 +12,7 @@ import { CreateTodoCommand } from './create-todo.command';
 export class CreateTodoHandler implements ICommandHandler<CreateTodoCommand> {
   constructor(
     private readonly todoRepository: TodoRepository
-  ) {}
+  ) { }
 
   @Span('Handler')
   async execute(command: CreateTodoCommand) {

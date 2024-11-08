@@ -11,7 +11,7 @@ import { ListTodosQuery } from './list-todos.query';
 export class ListTodosHandler implements IQueryHandler<ListTodosQuery> {
   constructor(
     private readonly todoRepository: TodoRepository
-  ) {}
+  ) { }
 
   @Span('Handler')
   async execute(query: ListTodosQuery) {

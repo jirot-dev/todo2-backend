@@ -7,7 +7,7 @@ export class HealthController {
   constructor(
     private health: HealthCheckService,
     private healthService: HealthService,
-  ) {}
+  ) { }
 
   @Get()
   @HealthCheck()
@@ -21,9 +21,9 @@ export class HealthController {
 
   @Get('ping')
   ping() {
-    return { 
-      status: 'ok', 
-      timestamp: new Date().toISOString() 
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString()
     };
   }
 }

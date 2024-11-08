@@ -13,7 +13,7 @@ import { UpdateTodoCommand } from './update-todo.command';
 export class UpdateTodoHandler implements ICommandHandler<UpdateTodoCommand> {
   constructor(
     private readonly todoRepository: TodoRepository
-  ) {}
+  ) { }
 
   @Span('Handler')
   async execute(command: UpdateTodoCommand) {

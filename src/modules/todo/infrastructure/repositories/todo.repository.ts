@@ -28,12 +28,12 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
     async update(todo: Todo): Promise<Todo> {
         const entity = this.toEntity(todo);
         await this.repository
-        .createQueryBuilder()
-        .update(TodoEntity)
-        .set(entity)
-        .where('id = :id', { id: entity.id })
-        .execute();
-      
+            .createQueryBuilder()
+            .update(TodoEntity)
+            .set(entity)
+            .where('id = :id', { id: entity.id })
+            .execute();
+
         return this.toDomain(await this.repository.findOneBy({ id: entity.id }));
     }
 
@@ -68,8 +68,8 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
             queryBuilder.orderBy(`todo.dueDate`, 'ASC').orderBy(`todo.position`, 'ASC');
         } else if (orderBy === TodoOrder.PRIORITY) {
             queryBuilder.orderBy(`todo.priority`, 'DESC').orderBy(`todo.position`, 'ASC');
-        } 
-        
+        }
+
         const [entities, total] = await queryBuilder
             .skip((page - 1) * pageSize)
             .take(pageSize)

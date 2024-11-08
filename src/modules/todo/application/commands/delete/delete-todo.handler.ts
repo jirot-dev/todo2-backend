@@ -11,7 +11,7 @@ import { DeleteTodoCommand } from './delete-todo.command';
 export class DeleteTodoHandler implements ICommandHandler<DeleteTodoCommand> {
   constructor(
     private readonly todoRepository: TodoRepository
-  ) {}
+  ) { }
 
   @Span('Handler')
   async execute(command: DeleteTodoCommand) {

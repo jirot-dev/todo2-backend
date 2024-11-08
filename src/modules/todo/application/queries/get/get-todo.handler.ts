@@ -13,7 +13,7 @@ import { GetTodoQuery } from './get-todo.query';
 export class GetTodoHandler implements IQueryHandler<GetTodoQuery> {
   constructor(
     private readonly todoRepository: TodoRepository
-  ) {}
+  ) { }
 
   @Span('Handler')
   async execute(query: GetTodoQuery) {

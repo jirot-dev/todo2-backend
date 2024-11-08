@@ -29,7 +29,7 @@ export class AppLogger implements LoggerService {
 
     // Initialize enabled transports
     const activeTransports: winston.transport[] = [];
-    
+
     AVAILABLE_TRANSPORTS.forEach(type => {
       const transport = transportFactory.createTransport(type);
       if (transport) {
@@ -53,38 +53,38 @@ export class AppLogger implements LoggerService {
   }
 
   log(message: any, context?: string, metadata?: LogMetadata): void {
-    this.winstonLogger.info(message, { 
-      context: context || this.context, 
-      ...metadata 
+    this.winstonLogger.info(message, {
+      context: context || this.context,
+      ...metadata
     });
   }
 
   error(message: any, trace?: string, context?: string, metadata?: LogMetadata): void {
-    this.winstonLogger.error(message, { 
-      trace, 
-      context: context || this.context, 
-      ...metadata 
+    this.winstonLogger.error(message, {
+      trace,
+      context: context || this.context,
+      ...metadata
     });
   }
 
   warn(message: any, context?: string, metadata?: LogMetadata): void {
-    this.winstonLogger.warn(message, { 
-      context: context || this.context, 
-      ...metadata 
+    this.winstonLogger.warn(message, {
+      context: context || this.context,
+      ...metadata
     });
   }
 
   debug(message: any, context?: string, metadata?: LogMetadata): void {
-    this.winstonLogger.debug(message, { 
-      context: context || this.context, 
-      ...metadata 
+    this.winstonLogger.debug(message, {
+      context: context || this.context,
+      ...metadata
     });
   }
 
   verbose(message: any, context?: string, metadata?: LogMetadata): void {
-    this.winstonLogger.verbose(message, { 
-      context: context || this.context, 
-      ...metadata 
+    this.winstonLogger.verbose(message, {
+      context: context || this.context,
+      ...metadata
     });
   }
 
@@ -97,7 +97,7 @@ export class AppLogger implements LoggerService {
   getLogLevel(): string {
     return this.winstonLogger.level;
   }
-  
+
   getTransportStatus(type: LogTransportType): TransportStatus | null {
     const transport = this.transports.get(type);
     if (!transport) return null;

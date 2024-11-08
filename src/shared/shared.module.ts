@@ -6,19 +6,19 @@ import { LoggingModule } from './logging/logging.module';
 import { ErrorHandlingModule } from './error-handling/error-handling.module';
 
 @Module({
-    imports: [
-      AppConfigModule,
-      OtelModule,
-      CoreModule,
-      LoggingModule,
-      ErrorHandlingModule,
-    ],
-    exports: [
-      AppConfigModule,
-      OtelModule,
-      CoreModule,
-      LoggingModule,
-      ErrorHandlingModule
-    ]
+  imports: [
+    AppConfigModule,
+    OtelModule,
+    CoreModule,
+    LoggingModule,
+    ErrorHandlingModule,
+  ],
+  exports: [
+    AppConfigModule,
+    OtelModule,
+    CoreModule,
+    LoggingModule,
+    ErrorHandlingModule
+  ]
 })
-export class SharedModule {}
+export class SharedModule { }

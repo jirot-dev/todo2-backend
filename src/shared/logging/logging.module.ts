@@ -8,4 +8,4 @@ import { AppLogger } from './services/app-logger.service';
     providers: [AppLogger],
     exports: []
 })
-export class LoggingModule {}
+export class LoggingModule { }

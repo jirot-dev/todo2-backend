@@ -32,36 +32,36 @@ export class ExceptionsFilter implements ExceptionFilter {
   }
 
   catch(exception: unknown, host: ArgumentsHost): void {
-      const { httpAdapter } = this.httpAdapterHost;
-      const ctx = host.switchToHttp();
-      const request = ctx.getRequest();
-      const response = ctx.getResponse();
+    const { httpAdapter } = this.httpAdapterHost;
+    const ctx = host.switchToHttp();
+    const request = ctx.getRequest();
+    const response = ctx.getResponse();
 
-      try {
-          this.logger.error(exception);
+    try {
+      this.logger.error(exception);
 
-          // Find the first handler that can handle this error
-          const handler = this.errorHandlers.find(h => h.canHandle(exception));
-          const errorResponse = handler.handle(exception, request, this.i18nService, this.cls);
+      // Find the first handler that can handle this error
+      const handler = this.errorHandlers.find(h => h.canHandle(exception));
+      const errorResponse = handler.handle(exception, request, this.i18nService, this.cls);
 
-          // Add correlation ID if available
-          if (request.correlationId) {
-            errorResponse.correlationId = this.cls.get('correlationId');
-          }
-
-          httpAdapter.reply(response, errorResponse, errorResponse.statusCode);
-      } catch (filterError) {
-          // If everything fails, send a basic error response
-          httpAdapter.reply(
-              response, 
-              { 
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                message: 'An unexpected error occurred',
-                timestamp: new Date().toISOString(),
-                path: request.url
-              }, 
-              HttpStatus.INTERNAL_SERVER_ERROR
-          );
+      // Add correlation ID if available
+      if (request.correlationId) {
+        errorResponse.correlationId = this.cls.get('correlationId');
       }
+
+      httpAdapter.reply(response, errorResponse, errorResponse.statusCode);
+    } catch (filterError) {
+      // If everything fails, send a basic error response
+      httpAdapter.reply(
+        response,
+        {
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: 'An unexpected error occurred',
+          timestamp: new Date().toISOString(),
+          path: request.url
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 }

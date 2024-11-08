@@ -95,7 +95,7 @@ export class TransportFactory {
       replaceTimestamp: true,
       onConnectionError: (err) => console.error('Loki connection error:', err),
     });
-    
+
   }
 
   private createFluentdTransport(): winston.transport | null {

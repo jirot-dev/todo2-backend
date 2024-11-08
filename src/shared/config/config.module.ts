@@ -12,4 +12,4 @@ import { appConfig, databaseConfig, healthConfig, localeConfig, logConfig, otelC
         })
     ]
 })
-export class AppConfigModule {}
+export class AppConfigModule { }

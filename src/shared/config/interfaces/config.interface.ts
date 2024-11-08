@@ -1,13 +1,13 @@
 export interface AppConfig {
-  env: string;
-  name: string;
-  version: string;
-  port: number;
-  cors: {
-    origin: string[];
-  };
-  path: string;
-  docPath: string;
+    env: string;
+    name: string;
+    version: string;
+    port: number;
+    cors: {
+        origin: string[];
+    };
+    path: string;
+    docPath: string;
 }
 
 export interface DiskHealthConfig {
@@ -32,13 +32,13 @@ export interface DatabaseConfig {
     database: string;
     autoLoadEntities: boolean;
     synchronize: boolean;
-} 
-  
+}
+
 export interface LocaleConfig {
     defaultLocale: string;
     locales: string[];
 }
-  
+
 export interface LogConfig {
     level: string;
     console: {

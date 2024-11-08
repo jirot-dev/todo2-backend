@@ -17,7 +17,7 @@ export class PostgresTransport extends Transport {
 
   constructor(logConfig: LogConfig, databaseConfig: DatabaseConfig) {
     super();
-    
+
     // Create pool config from ConfigService
     const poolConfig: PoolConfig = {
       host: databaseConfig.host,
