@@ -108,9 +108,11 @@ export const logConfig = registerAs('log', () => ({
 }));
 
 export const otelConfig = registerAs('otel', () => ({
-  enabled: process.env.OTEL_ENABLED === 'true',
-  tracingStart: process.env.OTEL_TRACING_START === 'true',
-  endpoint: process.env.OTEL_ENDPOINT,
-  authHeader: process.env.OTEL_AUTH_HEADER,
-  authKey: process.env.OTEL_AUTH_KEY
+  enabled: process.env.OTEL_SDK_DISABLED === 'false',
+  tracesStart: process.env.OTEL_EXPORTER_OTLP_TRACES_START === 'true',
+  tracesEndpoint: process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT,
+  tracesHeaders: process.env.OTEL_EXPORTER_OTLP_TRACES_HEADERS,
+  metricsEndpoint: process.env.OTEL_EXPORTER_OTLP_METRICS_ENDPOINT,
+  metricsHeaders: process.env.OTEL_EXPORTER_OTLP_METRICS_HEADERS,
+  metricsInterval: parseInt(process.env.OTEL_METRIC_EXPORT_INTERVAL || '60000', 10),
 }));

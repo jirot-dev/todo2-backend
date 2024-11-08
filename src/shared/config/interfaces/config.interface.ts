@@ -86,10 +86,12 @@ export interface LogConfig {
 
 export interface OtelConfig {
     enabled: boolean;
-    tracingStart: boolean;
-    endpoint: string;
-    authHeader: string;
-    authKey: string;
+    tracesStart: boolean;
+    tracesEndpoint: string;
+    tracesHeaders: string;
+    metricsEndpoint: string;
+    metricsHeaders: string;
+    metricsInterval: number;
 }
 
 export interface Config {

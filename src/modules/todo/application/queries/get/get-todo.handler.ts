@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
+import { Span } from 'nestjs-otel';
 
 import { NotFoundError } from 'src/shared/error-handling/exceptions/not-found.error';
 import { Todo } from '../../../domain/models/todo.model';
@@ -14,6 +15,7 @@ export class GetTodoHandler implements IQueryHandler<GetTodoQuery> {
     private readonly todoRepository: TodoRepository
   ) {}
 
+  @Span('Handler')
   async execute(query: GetTodoQuery) {
     const item = await this.todoRepository.getById(query.id);
     if (!item) {

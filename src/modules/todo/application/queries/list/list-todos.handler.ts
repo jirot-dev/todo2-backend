@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
+import { Span } from 'nestjs-otel';
 
 import { Todo } from '../../../domain/models/todo.model';
 import { TodoRepository } from '../../../infrastructure/repositories/todo.repository';
@@ -12,6 +13,7 @@ export class ListTodosHandler implements IQueryHandler<ListTodosQuery> {
     private readonly todoRepository: TodoRepository
   ) {}
 
+  @Span('Handler')
   async execute(query: ListTodosQuery) {
     return await this.todoRepository.list(query.status, query.orderBy, query.page, query.pageSize);
   }

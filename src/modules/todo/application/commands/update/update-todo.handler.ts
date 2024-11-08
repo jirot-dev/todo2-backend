@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Span } from 'nestjs-otel';
 
 import { NotFoundError } from 'src/shared/error-handling/exceptions/not-found.error';
 import { Todo } from '../../../domain/models/todo.model';
@@ -14,6 +15,7 @@ export class UpdateTodoHandler implements ICommandHandler<UpdateTodoCommand> {
     private readonly todoRepository: TodoRepository
   ) {}
 
+  @Span('Handler')
   async execute(command: UpdateTodoCommand) {
     const item = await this.todoRepository.getById(command.id);
     if (!item) {

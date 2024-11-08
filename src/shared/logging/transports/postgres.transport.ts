@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as Transport from 'winston-transport';
+import Transport from 'winston-transport';
 import { Pool, PoolConfig } from 'pg';
 
 import { DatabaseConfig, LogConfig } from 'src/shared/config/interfaces/config.interface';

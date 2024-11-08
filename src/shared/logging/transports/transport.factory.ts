@@ -1,12 +1,14 @@
 import * as winston from 'winston';
 import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
-import * as DailyRotateFile from 'winston-daily-rotate-file';
+import DailyRotateFile from 'winston-daily-rotate-file';
+import LokiTransport from 'winston-loki';
+
 import { PostgresTransport } from './postgres.transport';
 import { LogTransportType } from '../types/app-logger.types';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig, DatabaseConfig, LogConfig } from 'src/shared/config/interfaces/config.interface';
+
 /*
-import * as WinstonLoki from 'winston-loki';
 import * as WinstonLogstash from 'winston-logstash-transport';
 import { FluentTransport } from 'winston-fluent-transport';
 */
@@ -85,9 +87,7 @@ export class TransportFactory {
   private createLokiTransport(): winston.transport | null {
     if (!this.logConfig.loki.enabled) return null;
 
-    return null;
-    /*
-    return new WinstonLoki({
+    return new LokiTransport({
       host: this.logConfig.loki.host,
       labels: { app: this.appConfig.name },
       json: true,
@@ -95,7 +95,7 @@ export class TransportFactory {
       replaceTimestamp: true,
       onConnectionError: (err) => console.error('Loki connection error:', err),
     });
-    */
+    
   }
 
   private createFluentdTransport(): winston.transport | null {

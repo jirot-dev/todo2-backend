@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Span } from 'nestjs-otel';
 
 import { BaseRepository } from 'src/shared/base/repositories/base.repository';
 import { TodoEntity } from '../entities/todo.entity';
@@ -16,12 +17,14 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
         super(repository);
     }
 
+    @Span('Repository')
     async create(todo: Todo): Promise<Todo> {
         const entity = this.toEntity(todo);
         const savedEntity = await this.repository.save(entity);
         return this.toDomain(savedEntity);
     }
 
+    @Span('Repository')
     async update(todo: Todo): Promise<Todo> {
         const entity = this.toEntity(todo);
         await this.repository
@@ -34,16 +37,19 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
         return this.toDomain(await this.repository.findOneBy({ id: entity.id }));
     }
 
+    @Span('Repository')
     async delete(id: number): Promise<void> {
         const result = await this.repository.delete(id);
         await this.throwIfNotDeleted(result);
     }
 
+    @Span('Repository')
     async getById(id: number): Promise<Todo | null> {
         const entity = await this.repository.findOne({ where: { id } });
         return entity ? this.toDomain(entity) : null;
     }
 
+    @Span('Repository')
     async list(
         status?: TodoStatus,
         orderBy: TodoOrder = TodoOrder.CREATED_DATE,
@@ -75,6 +81,7 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
         };
     }
 
+    @Span('toEntity')
     private toEntity(domain: Todo): TodoEntity {
         const entity = new TodoEntity();
         const json = domain.toJson();
@@ -86,6 +93,7 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
         return entity;
     }
 
+    @Span('toDomain')
     private toDomain(entity: TodoEntity): Todo {
         const todo = new Todo();
         todo.merge(entity as Partial<Todo>);
