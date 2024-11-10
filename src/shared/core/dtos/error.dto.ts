@@ -25,6 +25,9 @@ export class ErrorDto {
   timestamp: string;
 
   @ApiProperty()
+  messageKey: string;
+
+  @ApiProperty()
   message: string;
 
   @ApiProperty()
@@ -45,6 +48,7 @@ export class ErrorDtoBuilder {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       timestamp: new Date().toISOString(),
       path,
+      messageKey: '',
       message: '',
     };
   }
@@ -54,8 +58,12 @@ export class ErrorDtoBuilder {
     return this;
   }
 
+  setMessageKey(messageKey: string): this {
+    this.response.messageKey = messageKey;
+    return this;
+  }
+
   setMessage(message: string): this {
-    console.log(message);
     this.response.message = message;
     return this;
   }

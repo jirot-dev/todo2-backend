@@ -1,9 +1,9 @@
 {
   "internal": "An internal server error occurred. Please try again later",
   "database": "A database error occurred. Please try again later",
-  "aggregate": "Multiple validation errors occurred",
+  "notFound": "{resource} with ID {id} was not found",
   "item": {
-    "notFound": "{resource} with ID {id} was not found"
+    "validation": "Validation errors"
   },
   "field": {
     "required": "The {field} field is required",

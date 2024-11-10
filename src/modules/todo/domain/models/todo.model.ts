@@ -1,7 +1,7 @@
 import { DateService } from 'src/shared/core/services/date.service';
 import { ValidationError } from 'src/shared/error-handling/exceptions/validation.error';
-import { AggregateError } from 'src/shared/error-handling/exceptions/aggregate.error';
 import { TodoStatus, TodoPriority } from '../enums/enums';
+import { ErrorMessages } from 'src/shared/error-handling/constants/error-constants';
 
 export class Todo {
     private _id?: number | null;
@@ -142,19 +142,19 @@ export class Todo {
         const errors: ValidationError[] = [];
 
         if (data.title !== undefined && !data.title.trim()) {
-            errors.push(new ValidationError('errors.field.required', {}, 'title'));
+            errors.push(new ValidationError('errors.field.required', {}, 'todo.title'));
         }
 
         if (data.detail !== undefined && data.detail.length > 2000) {
-            errors.push(new ValidationError('errors.field.length', { max: 2000 }, 'detail'));
+            errors.push(new ValidationError('errors.field.length', { max: 2000 }, 'todo.detail'));
         }
 
         if (data.progress !== undefined && (data.progress < 0 || data.progress > 100)) {
-            errors.push(new ValidationError('errors.field.range', { min: 0, max: 100 }, 'progress'));
+            errors.push(new ValidationError('errors.field.range', { min: 0, max: 100 }, 'todo.progress'));
         }
 
         if (errors.length > 0) {
-            throw new AggregateError(errors);
+            throw new ValidationError(ErrorMessages.ITEM_VALIDATION, undefined, undefined, errors);
         }
     }
 
@@ -184,11 +184,11 @@ export class Todo {
         const errors: ValidationError[] = [];
 
         if (!this.title?.trim()) {
-            errors.push(new ValidationError('errors.field.required', {}, 'title'));
+            errors.push(new ValidationError('errors.field.required', {}, 'todo.title'));
         }
 
         if (errors.length > 0) {
-            throw new AggregateError(errors);
+            throw new ValidationError(ErrorMessages.ITEM_VALIDATION, {}, undefined, errors);
         }
     }
 

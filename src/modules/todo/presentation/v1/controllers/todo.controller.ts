@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseInterceptors, Logger, ConsoleLogger } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery, ApiParam, ApiBody } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { OtelMethodCounter, Span } from 'nestjs-otel';
 
 import { ContextInterceptor } from 'src/shared/core/interceptors/context.interceptor';
-import { ErrorDto } from 'src/shared/error-handling/dtos/error.dto';
+import { ApiResponses } from 'src/shared/core/decorators/api-responses.decorator';
 import { CreateTodoCommand } from '../../../application/commands/create/create-todo.command';
 import { UpdateTodoCommand } from '../../../application/commands/update/update-todo.command';
 import { DeleteTodoCommand } from '../../../application/commands/delete/delete-todo.command';
@@ -14,7 +14,7 @@ import { CreateTodoDtoV1, UpdateTodoDtoV1, ListTodoQueryDtoV1, ResponseTodoDtoV1
 
 
 @ApiTags('Todo')
-@UseInterceptors(ContextInterceptor('Todo'))
+@UseInterceptors(ContextInterceptor('todo'))
 @Controller({ version: '1', path: 'todo' })
 export class TodoControllerV1 {
   private logger = new Logger(TodoControllerV1.name);
@@ -28,9 +28,7 @@ export class TodoControllerV1 {
   @OtelMethodCounter()
   @ApiOperation({operationId: 'listTodos'})
   @ApiQuery({ type: ListTodoQueryDtoV1 })
-  @ApiResponse({ status: 200, type: ResponseTodoDtoV1, isArray: true })
-  @ApiResponse({ status: 400, type: ErrorDto })
-  @ApiResponse({ status: 500, type: ErrorDto })
+  @ApiResponses({ type:ResponseTodoDtoV1, success: 200, isArray: true })
   @Get()
   async list(@Query() query: ListTodoQueryDtoV1) {
     this.logger.log('test');
@@ -44,10 +42,7 @@ export class TodoControllerV1 {
   @OtelMethodCounter()
   @ApiOperation({operationId: 'getTodo'})
   @ApiParam({ name: 'id', type: 'number' })
-  @ApiResponse({ status: 200, type: ResponseTodoDtoV1 })
-  @ApiResponse({ status: 400, type: ErrorDto })
-  @ApiResponse({ status: 404, type: ErrorDto })
-  @ApiResponse({ status: 500, type: ErrorDto })
+  @ApiResponses({ type: ResponseTodoDtoV1, success: 200, errorStatus: [404] })
   @Get(':id')
   async get(@Param('id') id: number) {
     const todo = await this.queryBus.execute(new GetTodoQuery(id));
@@ -58,9 +53,7 @@ export class TodoControllerV1 {
   @OtelMethodCounter()
   @ApiOperation({operationId: 'createTodo'})
   @ApiBody({ type: CreateTodoDtoV1 })
-  @ApiResponse({ status: 201, type: ResponseTodoDtoV1 })
-  @ApiResponse({ status: 400, type: ErrorDto })
-  @ApiResponse({ status: 500, type: ErrorDto })
+  @ApiResponses({ type: ResponseTodoDtoV1, success: 201 })
   @Post()
   async create(@Body() dto: CreateTodoDtoV1) {
     const command = new CreateTodoCommand(
@@ -79,10 +72,7 @@ export class TodoControllerV1 {
   @OtelMethodCounter()
   @ApiOperation({operationId: 'updateTodo'})
   @ApiBody({ type: UpdateTodoDtoV1 })
-  @ApiResponse({ status: 201, type: ResponseTodoDtoV1 })
-  @ApiResponse({ status: 400, type: ErrorDto })
-  @ApiResponse({ status: 404, type: ErrorDto })
-  @ApiResponse({ status: 500, type: ErrorDto })
+  @ApiResponses({ type: ResponseTodoDtoV1, success: 201, errorStatus: [404] })
   @Put(':id')
   async update(@Param('id') id: number, @Body() dto: UpdateTodoDtoV1) {
     const command = new UpdateTodoCommand(

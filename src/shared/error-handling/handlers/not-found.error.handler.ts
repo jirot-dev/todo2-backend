@@ -1,32 +1,35 @@
-import { HttpStatus } from '@nestjs/common';
-import { I18nService } from 'nestjs-i18n';
 import { ClsService, ClsStore } from 'nestjs-cls';
-import { ErrorDto, ErrorDtoBuilder } from '../dtos/error.dto';
+import { I18nService } from 'nestjs-i18n';
 import { NotFoundError } from '../exceptions/not-found.error';
-import { ErrorHandler } from '../handlers/base.error.handler';
+import { AbstractErrorHandler, MessageArgsHandler } from '../handlers/base.error.handler';
+import { ErrorMessages, ErrorStatus } from '../constants/error-constants';
 
 
-export class NotFoundErrorHandler implements ErrorHandler {
-  canHandle(error: unknown): boolean {
-    return error instanceof NotFoundError;
+export class NotFoundErrorHandler extends AbstractErrorHandler<NotFoundError> {
+  constructor(cls: ClsService<ClsStore>) {
+    super(NotFoundError, ErrorStatus.NOT_FOUND, ErrorMessages.NOT_FOUND);
+
+    this.messageArgsHandlers.push(new NotFoundMessageArgsHandler(cls));
   }
+}
 
-  handle(error: NotFoundError, request: any, i18nService: I18nService, cls: ClsService<ClsStore>): ErrorDto {
-    const resource = cls.get('resource');
-    const resourceId = cls.get('resourceId');
-console.log(resource);
-console.log(resourceId);
-console.log(request.i18nLang);
-    return new ErrorDtoBuilder(request.url)
-      .setStatus(HttpStatus.NOT_FOUND)
-      .setMessage(i18nService.translate(error.messageKey, {
+class NotFoundMessageArgsHandler implements MessageArgsHandler {
+  constructor(private readonly cls: ClsService<ClsStore>) {}
+
+  getMessageArgs(error: Error, request: any, i18nService: I18nService, baseArgs: Record<string, any>): Record<string, any> {
+    if (!(error instanceof NotFoundError)) {
+      return baseArgs;
+    }
+
+    const resource = error.getResource() || this.cls.get('resource');
+    const id = error.getId() || this.cls.get('resourceId');
+
+    return {
+      ...baseArgs,
+      resource: resource ? i18nService.translate(`resources.${resource}`, {
         lang: request.i18nLang,
-        args: {
-          ...error.messageArgs,
-          resource: error.messageArgs.resource || resource,
-          id: error.messageArgs.id || resourceId
-        },
-      }))
-      .build();
+      }) : undefined,
+      id
+    };
   }
 }

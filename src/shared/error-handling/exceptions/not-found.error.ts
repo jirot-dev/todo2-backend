@@ -1,14 +1,25 @@
+import { ErrorMessages, ErrorStatus } from '../constants/error-constants';
 import { BaseError } from './base.error';
 
 
 export class NotFoundError extends BaseError {
   constructor(
-    resource?: string,
-    id?: string | number
+    private readonly resource?: string,
+    private readonly id?: string | number
   ) {
     super(
-      'errors.item.notFound',
-      { resource, id }
+      ErrorMessages.NOT_FOUND,
+      { resource, id },
+      ErrorStatus.NOT_FOUND,
+      []
     );
+  }
+
+  getResource(): string | undefined {
+    return this.resource;
+  }
+
+  getId(): string | number | undefined {
+    return this.id;
   }
 }

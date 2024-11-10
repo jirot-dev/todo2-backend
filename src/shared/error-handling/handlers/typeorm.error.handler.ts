@@ -1,20 +1,17 @@
+import { TypeORMError } from 'typeorm';
 import { ErrorDtoBuilder } from '../../core/dtos/error.dto';
 import { AbstractErrorHandler } from './base.error.handler';
 import { ErrorMessages, ErrorStatus } from '../constants/error-constants';
 
-export class FallbackErrorHandler extends AbstractErrorHandler<Error> {
+export class TypeORMErrorHandler extends AbstractErrorHandler<TypeORMError> {
   constructor() {
-    super(Error, ErrorStatus.INTERNAL_ERROR, ErrorMessages.INTERNAL);
-  }
-
-  canHandle(error: unknown): boolean {
-    return true;
+    super(TypeORMError, ErrorStatus.INTERNAL_ERROR, ErrorMessages.DATABASE);
   }
 
   protected customizeBuilder(
     builder: ErrorDtoBuilder,
-    error: Error,
+    error: TypeORMError,
   ): void {
-    builder.setDetail(error instanceof Error ? error.stack : String(error));
+    builder.setDetail(error.message);
   }
 }

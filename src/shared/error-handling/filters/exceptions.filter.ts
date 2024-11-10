@@ -5,9 +5,9 @@ import { I18nService } from 'nestjs-i18n';
 import { BaseErrorHandler, ErrorHandler } from '../handlers/base.error.handler';
 import { HttpExceptionHandler } from '../handlers/http.exception.handler';
 import { FallbackErrorHandler } from '../handlers/fallback.error.handler';
-import { TypeORMErrorHandler } from '../handlers/typeorm.errorhandler';
-import { AggregateErrorHandler } from '../handlers/aggregate.error.handler';
+import { TypeORMErrorHandler } from '../handlers/typeorm.error.handler';
 import { NotFoundErrorHandler } from '../handlers/not-found.error.handler';
+import { ValidationErrorHandler } from '../handlers/validation.error.handler';
 
 
 @Catch()
@@ -23,9 +23,9 @@ export class ExceptionsFilter implements ExceptionFilter {
     // Order matters - more specific handlers should come first
     this.errorHandlers = [
       new HttpExceptionHandler(),
-      new NotFoundErrorHandler(),
+      new NotFoundErrorHandler(this.cls),
+      new ValidationErrorHandler(),
       new TypeORMErrorHandler(),
-      new AggregateErrorHandler(),
       new FallbackErrorHandler(),
       new BaseErrorHandler(),
     ];

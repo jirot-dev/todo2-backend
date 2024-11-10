@@ -1,12 +1,18 @@
+import { ErrorStatus } from '../constants/error-constants';
 import { BaseError } from './base.error';
 
 
 export class ValidationError extends BaseError {
-    constructor(
-        public readonly messageKey: string,
-        public readonly messageArgs?: Record<string, any>,
-        public readonly fieldName?: string
-    ) {
-        super(messageKey);
-    }
+  constructor(
+    messageKey: string,
+    messageArgs?: Record<string, any>,
+    private readonly fieldName?: string,
+    subErrors?: BaseError[]
+  ) {
+    super(messageKey, messageArgs, ErrorStatus.BAD_REQUEST, subErrors);
+  }
+
+  getFieldName(): string | undefined {
+    return this.fieldName;
+  }
 }

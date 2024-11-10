@@ -8,6 +8,7 @@ import { appConfig, databaseConfig, healthConfig, localeConfig, logConfig, otelC
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
+            cache: true,
             load: [appConfig, healthConfig, databaseConfig, localeConfig, logConfig, otelConfig],
         })
     ]

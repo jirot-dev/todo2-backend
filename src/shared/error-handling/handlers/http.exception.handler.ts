@@ -1,21 +1,18 @@
 import { HttpException } from '@nestjs/common';
-import { I18nService } from 'nestjs-i18n';
-import { ClsService, ClsStore } from 'nestjs-cls';
-import { ErrorDto, ErrorDtoBuilder } from '../dtos/error.dto';
-import { ErrorHandler } from './base.error.handler';
+import { AbstractErrorHandler } from './base.error.handler';
+import { ErrorDtoBuilder } from '../../core/dtos/error.dto';
+import { ErrorMessages, ErrorStatus } from '../constants/error-constants';
 
-export class HttpExceptionHandler implements ErrorHandler {
-  canHandle(error: unknown): boolean {
-    return error instanceof HttpException;
+export class HttpExceptionHandler extends AbstractErrorHandler<Error> {
+  constructor() {
+    super(HttpException, ErrorStatus.INTERNAL_ERROR, ErrorMessages.INTERNAL);
   }
 
-  handle(error: HttpException, request: Request, i18nService: I18nService, cls: ClsService<ClsStore>): ErrorDto {
-    const status = error.getStatus();
+  protected customizeBuilder(
+    builder: ErrorDtoBuilder,
+    error: HttpException,
+  ): void {
     const response = error.getResponse();
-
-    return new ErrorDtoBuilder(request.url)
-      .setStatus(status)
-      .setMessage(typeof response === 'object' ? response['message'] : response)
-      .build();
+    builder.setMessage(typeof response === 'object' ? response['message'] : response);
   }
 }
