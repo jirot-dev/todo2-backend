@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 
-import { TodoStatus, TodoPriority } from '../../domain/enums/enums';
+import { TodoStatus, TodoPriority } from '../../domain/enums/enum';
 
 @Entity('todo')
 export class TodoEntity {

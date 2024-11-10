@@ -1,6 +1,6 @@
 import { I18nService } from 'nestjs-i18n';
 import { AbstractErrorHandler, MessageArgsHandler } from '../handlers/base.error.handler';
-import { ErrorMessages, ErrorStatus } from '../constants/error-constants';
+import { ErrorMessages, ErrorStatus } from '../constants/error-constant';
 import { ValidationError } from '../exceptions/validation.error';
 
 

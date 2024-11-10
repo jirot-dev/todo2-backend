@@ -1,12 +1,10 @@
-// src/shared/swagger/decorators/api-responses.decorator.ts
-
 import { applyDecorators } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { ErrorDto } from '../dtos/error.dto';
 
 interface ApiResponsesOptions {
   type: any;
-  success?: number;
+  successStatus?: number;
   isArray?: boolean;
   errorStatus?: number[]
 }
@@ -14,7 +12,7 @@ interface ApiResponsesOptions {
 export function ApiResponses(options: ApiResponsesOptions) {
   const {
     type,
-    success = 200,
+    successStatus = 200,
     isArray = false,
     errorStatus = []
   } = options;
@@ -31,7 +29,7 @@ export function ApiResponses(options: ApiResponsesOptions) {
 
   return applyDecorators(
     ApiResponse({
-      status: success,
+      status: successStatus,
       type: type,
       isArray
     }),

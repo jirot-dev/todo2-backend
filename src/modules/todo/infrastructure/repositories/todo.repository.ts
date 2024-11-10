@@ -6,7 +6,7 @@ import { Span } from 'nestjs-otel';
 import { BaseRepository } from 'src/shared/base/repositories/base.repository';
 import { TodoEntity } from '../entities/todo.entity';
 import { Todo } from '../../domain/models/todo.model';
-import { TodoStatus, TodoPriority, TodoOrder } from '../../domain/enums/enums';
+import { TodoStatus, TodoPriority, TodoOrder } from '../../domain/enums/enum';
 
 @Injectable()
 export class TodoRepository extends BaseRepository<TodoEntity> {

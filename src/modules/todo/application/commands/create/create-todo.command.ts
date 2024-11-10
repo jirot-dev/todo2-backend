@@ -1,4 +1,4 @@
-import { TodoPriority } from '../../../domain/enums/enums';
+import { TodoPriority } from '../../../domain/enums/enum';
 
 export class CreateTodoCommand {
   constructor(

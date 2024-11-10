@@ -2,7 +2,7 @@ import { IsString, IsNotEmpty, IsOptional, IsNumber, IsDate } from 'class-valida
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { TodoStatus, TodoPriority, TodoOrder } from '../../../domain/enums/enums';
+import { TodoStatus, TodoPriority, TodoOrder } from '../../../domain/enums/enum';
 import { Todo } from '../../../domain/models/todo.model';
 
 class BaseTodoDtoV1 {

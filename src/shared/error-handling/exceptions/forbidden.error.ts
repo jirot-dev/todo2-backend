@@ -1,4 +1,4 @@
-import { ErrorMessages, ErrorStatus } from '../constants/error-constants';
+import { ErrorMessages, ErrorStatus } from '../constants/error-constant';
 import { BaseError } from './base.error';
 
 

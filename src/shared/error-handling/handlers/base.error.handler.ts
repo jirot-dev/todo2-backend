@@ -2,7 +2,7 @@ import { HttpException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { ClsService, ClsStore } from 'nestjs-cls';
 import { ErrorDto, ErrorDtoBuilder, SubErrorDto, ValidationErrorDto } from '../../core/dtos/error.dto';
-import { ErrorMessages, ErrorStatus } from '../constants/error-constants';
+import { ErrorMessages, ErrorStatus } from '../constants/error-constant';
 import { BaseError } from '../exceptions/base.error';
 import { ValidationError } from '../exceptions/validation.error';
 import { NotFoundError } from '../exceptions/not-found.error';
@@ -42,7 +42,7 @@ export abstract class AbstractErrorHandler<T extends Error> implements ErrorHand
   handle(error: unknown, request: Request, i18nService: I18nService, cls: ClsService<ClsStore>): ErrorDto {
     const typedError = error as T;
     const builder = new ErrorDtoBuilder(request.url)
-      .setStatus(this.getStatus(typedError))
+      .setStatusCode(this.getStatus(typedError))
       .setMessageKey(this.getMessageKey(typedError))
       .setMessage(this.getMessage(typedError, request, i18nService));
 

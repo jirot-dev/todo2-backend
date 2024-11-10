@@ -53,8 +53,8 @@ export class ErrorDtoBuilder {
     };
   }
 
-  setStatus(status: number): this {
-    this.response.statusCode = status;
+  setStatusCode(statusCode: number): this {
+    this.response.statusCode = statusCode;
     return this;
   }
 

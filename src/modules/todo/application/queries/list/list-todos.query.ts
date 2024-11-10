@@ -1,4 +1,4 @@
-import { TodoStatus, TodoOrder } from '../../../domain/enums/enums';
+import { TodoStatus, TodoOrder } from '../../../domain/enums/enum';
 
 export class ListTodosQuery {
   constructor(

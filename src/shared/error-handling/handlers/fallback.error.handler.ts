@@ -1,6 +1,6 @@
 import { ErrorDtoBuilder } from '../../core/dtos/error.dto';
 import { AbstractErrorHandler } from './base.error.handler';
-import { ErrorMessages, ErrorStatus } from '../constants/error-constants';
+import { ErrorMessages, ErrorStatus } from '../constants/error-constant';
 
 export class FallbackErrorHandler extends AbstractErrorHandler<Error> {
   constructor() {
