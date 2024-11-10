@@ -3,11 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import * as winston from 'winston';
 
 import { AVAILABLE_TRANSPORTS, LogTransportType } from '../types/app-logger.types';
-import { LogMetadata, TransportStatus } from '../interfaces/log.interface';
+import { LogMetadata } from '../interfaces/log-meta-data.interface';
 import { TransportFactory } from '../transports/transport.factory';
+import { TransportStatus } from '../interfaces/transport-status.interface';
 
 @Injectable({ scope: Scope.TRANSIENT })
-export class AppLogger implements LoggerService {
+export class AppLoggerService implements LoggerService {
   private winstonLogger: winston.Logger;
   private transports: Map<LogTransportType, winston.transport> = new Map();
   private runningTransports: Set<LogTransportType> = new Set();

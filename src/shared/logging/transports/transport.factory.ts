@@ -26,7 +26,7 @@ export class TransportFactory {
     this.env = this.appConfig.env;
   }
 
-  createTransport(type: LogTransportType): winston.transport | null {
+  createTransport(transportType: LogTransportType): winston.transport | null {
     const creators: Record<LogTransportType, () => winston.transport | null> = {
       console: () => this.createConsoleTransport(),
       file: () => this.createFileTransport(),
@@ -36,7 +36,7 @@ export class TransportFactory {
       logstash: () => this.createLogstashTransport(),
     };
 
-    const creator = creators[type];
+    const creator = creators[transportType];
     return creator ? creator() : null;
   }
 

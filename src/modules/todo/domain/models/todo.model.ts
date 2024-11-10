@@ -1,7 +1,9 @@
 import { DateService } from 'src/shared/core/services/date.service';
 import { ValidationError } from 'src/shared/error-handling/exceptions/validation.error';
 import { TodoStatus, TodoPriority } from '../enums/enum';
-import { ErrorMessages } from 'src/shared/error-handling/constants/error-constant';
+import { ErrorMessages } from 'src/shared/error-handling/constants/error.constant';
+import { TodoFields } from '../constants/todo-fields.constant';
+import { TodoValidation } from '../constants/todo-validation.constant';
 
 export class Todo {
     private _id?: number | null;
@@ -121,36 +123,38 @@ export class Todo {
         }
     }
 
-    public merge(data: Partial<Todo>) {
-        this.validateInput(data);
+    public merge(updateValues: Partial<Todo>) {
+        this.validateFields(updateValues);
 
-        (Object.keys(data) as Array<keyof Todo>)
-            .filter((key): key is keyof Todo => key in this)
-            .forEach((key) => {
-                const value = data[key];
-                if (value !== undefined) {
-                    (this as any)[key] = value;
-                }
-            });
+        const updateableKeys = (Object.keys(updateValues) as Array<keyof Todo>)
+            .filter((fieldName): fieldName is keyof Todo => fieldName in this);
+
+
+        updateableKeys.forEach((fieldname) => {
+            const updaeValue = updateValues[fieldname];
+            if (updaeValue !== undefined) {
+                (this as any)[fieldname] = updaeValue;
+            }
+        });
 
         this.setDefaults();
         this.updateDates();
         this.validateState();
     }
 
-    private validateInput(data: Partial<Todo>): void {
+    private validateFields(updateValues: Partial<Todo>): void {
         const errors: ValidationError[] = [];
 
-        if (data.title !== undefined && !data.title.trim()) {
-            errors.push(new ValidationError('errors.field.required', {}, 'todo.title'));
+        if (updateValues.title !== undefined && !updateValues.title.trim()) {
+            errors.push(new ValidationError(ErrorMessages.FIELD_REQUIRED, {}, TodoFields.TITLE));
         }
 
-        if (data.detail !== undefined && data.detail.length > 2000) {
-            errors.push(new ValidationError('errors.field.length', { max: 2000 }, 'todo.detail'));
+        if (updateValues.detail !== undefined && updateValues.detail.length > TodoValidation.DETAIL_LENGTH_MAX) {
+            errors.push(new ValidationError(ErrorMessages.FIELD_LENGTH, { max: TodoValidation.DETAIL_LENGTH_MAX }, TodoFields.DETAIL));
         }
 
-        if (data.progress !== undefined && (data.progress < 0 || data.progress > 100)) {
-            errors.push(new ValidationError('errors.field.range', { min: 0, max: 100 }, 'todo.progress'));
+        if (updateValues.progress !== undefined && (updateValues.progress < TodoValidation.PROGRESS_VALUE_MIN || updateValues.progress > TodoValidation.PROGRESS_VALUE_MAX)) {
+            errors.push(new ValidationError(ErrorMessages.FIELD_RANGE, { min: TodoValidation.PROGRESS_VALUE_MIN, max: TodoValidation.PROGRESS_VALUE_MAX }, TodoFields.PROGRESS));
         }
 
         if (errors.length > 0) {
@@ -184,7 +188,7 @@ export class Todo {
         const errors: ValidationError[] = [];
 
         if (!this.title?.trim()) {
-            errors.push(new ValidationError('errors.field.required', {}, 'todo.title'));
+            errors.push(new ValidationError(ErrorMessages.FIELD_REQUIRED, {}, 'todo.title'));
         }
 
         if (errors.length > 0) {

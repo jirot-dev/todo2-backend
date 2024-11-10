@@ -11,8 +11,8 @@ export class PostgresTransport extends Transport {
   private readonly schema: string;
   private readonly batchSize: number;
   private readonly flushInterval: number;
-  private batch: LogData[] = [];
-  private timer: NodeJS.Timeout | null = null;
+  private logBatch: LogData[] = [];
+  private flushTimer: NodeJS.Timeout | null = null;
   private isInitialized: boolean = false;
 
   constructor(logConfig: LogConfig, databaseConfig: DatabaseConfig) {
@@ -75,8 +75,8 @@ export class PostgresTransport extends Transport {
   }
 
   private startFlushTimer(): void {
-    this.timer = setInterval(() => {
-      if (this.batch.length > 0) {
+    this.flushTimer = setInterval(() => {
+      if (this.logBatch.length > 0) {
         this.flush().catch(err => {
           console.error('Failed to flush logs:', err);
         });
@@ -84,20 +84,20 @@ export class PostgresTransport extends Transport {
     }, this.flushInterval);
   }
 
-  async log(info: LogData, callback: () => void): Promise<void> {
+  async log(logEntry: LogData, callback: () => void): Promise<void> {
     setImmediate(() => {
-      this.emit('logged', info);
+      this.emit('logged', logEntry);
     });
 
-    this.batch.push({
-      level: info.level,
-      message: info.message,
+    this.logBatch.push({
+      level: logEntry.level,
+      message: logEntry.message,
       timestamp: new Date(),
-      context: info.context,
-      metadata: info.metadata,
+      context: logEntry.context,
+      metadata: logEntry.metadata,
     });
 
-    if (this.batch.length >= this.batchSize) {
+    if (this.logBatch.length >= this.batchSize) {
       try {
         await this.flush();
       } catch (error) {
@@ -109,10 +109,10 @@ export class PostgresTransport extends Transport {
   }
 
   private async flush(): Promise<void> {
-    if (this.batch.length === 0 || !this.isInitialized) return;
+    if (this.logBatch.length === 0 || !this.isInitialized) return;
 
-    const logsToInsert = [...this.batch];
-    this.batch = [];
+    const logsToInsert = [...this.logBatch];
+    this.logBatch = [];
 
     try {
       const values = logsToInsert.map((_, i) => {
@@ -137,18 +137,18 @@ export class PostgresTransport extends Transport {
       await this.pool.query(query, flatParams);
     } catch (error) {
       // In case of error, put the logs back in the batch to retry
-      this.batch = [...logsToInsert, ...this.batch];
+      this.logBatch = [...logsToInsert, ...this.logBatch];
       throw error;
     }
   }
 
   async close(): Promise<void> {
-    if (this.timer) {
-      clearInterval(this.timer);
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer);
     }
 
     // Flush any remaining logs
-    if (this.batch.length > 0) {
+    if (this.logBatch.length > 0) {
       try {
         await this.flush();
       } catch (error) {

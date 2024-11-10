@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SubErrorDto {
+export class SubErrorResponseDto {
   @ApiProperty()
   message: string;
 
@@ -9,12 +9,12 @@ export class SubErrorDto {
   messageKey: string;
 }
 
-export class ValidationErrorDto extends SubErrorDto {
+export class ValidationErrorResponseDto extends SubErrorResponseDto {
   @ApiProperty()
   fieldName: string;
 }
 
-export class ErrorDto {
+export class ErrorResponseDto {
   @ApiProperty()
   correlationId?: string;
 
@@ -33,15 +33,15 @@ export class ErrorDto {
   @ApiProperty()
   path: string;
 
-  @ApiProperty({ type: [SubErrorDto] })
-  errors?: SubErrorDto[];
+  @ApiProperty({ type: [SubErrorResponseDto] })
+  errors?: SubErrorResponseDto[];
 
   @ApiProperty()
   detail?: string;
 }
 
 export class ErrorDtoBuilder {
-  private response: ErrorDto;
+  private response: ErrorResponseDto;
 
   constructor(path: string) {
     this.response = {
@@ -68,7 +68,7 @@ export class ErrorDtoBuilder {
     return this;
   }
 
-  addSubErrors(errors: SubErrorDto[]): this {
+  addSubErrors(errors: SubErrorResponseDto[]): this {
     this.response.errors = errors;
     return this;
   }
@@ -85,7 +85,7 @@ export class ErrorDtoBuilder {
     return this;
   }
 
-  build(): ErrorDto {
+  build(): ErrorResponseDto {
     return this.response;
   }
 }

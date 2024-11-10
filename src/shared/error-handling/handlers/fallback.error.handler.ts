@@ -1,8 +1,8 @@
-import { ErrorDtoBuilder } from '../../core/dtos/error.dto';
-import { AbstractErrorHandler } from './base.error.handler';
-import { ErrorMessages, ErrorStatus } from '../constants/error-constant';
+import { ErrorDtoBuilder } from '../../core/dtos/error-response.dto';
+import { AbstractErrorHandler } from './abstract.error.handler';
+import { ErrorMessages, ErrorStatus } from '../constants/error.constant';
 
-export class FallbackErrorHandler extends AbstractErrorHandler<Error> {
+export class DefaultErrorHandler extends AbstractErrorHandler<Error> {
   constructor() {
     super(Error, ErrorStatus.INTERNAL_ERROR, ErrorMessages.INTERNAL);
   }
@@ -11,7 +11,7 @@ export class FallbackErrorHandler extends AbstractErrorHandler<Error> {
     return true;
   }
 
-  protected customizeBuilder(
+  protected customizeErrorDtoBuilder(
     builder: ErrorDtoBuilder,
     error: Error,
   ): void {

@@ -1,8 +1,8 @@
-import { ErrorMessages, ErrorStatus } from '../constants/error-constant';
-import { BaseError } from './base.error';
+import { ErrorMessages, ErrorStatus } from '../constants/error.constant';
+import { ApplicationError } from './application.error';
 
 
-export class UnauthorizedError extends BaseError {
+export class UnauthorizedError extends ApplicationError {
     constructor() {
         super(
             ErrorMessages.UNAUTHORIZED,

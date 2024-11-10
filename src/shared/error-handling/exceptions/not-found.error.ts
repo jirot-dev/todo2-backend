@@ -1,8 +1,8 @@
-import { ErrorMessages, ErrorStatus } from '../constants/error-constant';
-import { BaseError } from './base.error';
+import { ErrorMessages, ErrorStatus } from '../constants/error.constant';
+import { ApplicationError } from './application.error';
 
 
-export class NotFoundError extends BaseError {
+export class NotFoundError extends ApplicationError {
   constructor(
     private readonly resource?: string,
     private readonly id?: string | number

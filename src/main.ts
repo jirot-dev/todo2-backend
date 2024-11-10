@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { AppLogger } from './shared/logging/services/app-logger.service';
+import { AppLoggerService } from './shared/logging/services/app-logger.service';
 import { AppConfig } from './shared/config/interfaces/config.interface';
 
 
@@ -19,8 +19,8 @@ async function bootstrap() {
 
   app.use(helmet());
 
-  const appLogger = await app.resolve(AppLogger);
-  app.useLogger(appLogger);
+  const appLoggerService = await app.resolve(AppLoggerService);
+  app.useLogger(appLoggerService);
 
   app.setGlobalPrefix(appConfig.path);
   app.enableVersioning();

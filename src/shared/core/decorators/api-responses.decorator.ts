@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { ErrorDto } from '../dtos/error.dto';
+import { ErrorResponseDto } from '../dtos/error-response.dto';
 
 interface ApiResponsesOptions {
   type: any;
@@ -18,13 +18,13 @@ export function ApiResponses(options: ApiResponsesOptions) {
   } = options;
 
   const baseErrors = [
-    { status: 400, type: ErrorDto },
-    { status: 500, type: ErrorDto },
+    { status: 400, type: ErrorResponseDto },
+    { status: 500, type: ErrorResponseDto },
   ];
 
   const additionalErrors = errorStatus.map(status => ({
     status,
-    type: ErrorDto
+    type: ErrorResponseDto
   }));
 
   return applyDecorators(

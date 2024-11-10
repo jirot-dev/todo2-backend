@@ -1,20 +1,11 @@
 import { HttpException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { ClsService, ClsStore } from 'nestjs-cls';
-import { ErrorDto, ErrorDtoBuilder, SubErrorDto, ValidationErrorDto } from '../../core/dtos/error.dto';
-import { ErrorMessages, ErrorStatus } from '../constants/error-constant';
-import { BaseError } from '../exceptions/base.error';
+import { ErrorResponseDto, ErrorDtoBuilder, SubErrorResponseDto, ValidationErrorResponseDto } from '../../core/dtos/error-response.dto';
+import { ApplicationError } from '../exceptions/application.error';
 import { ValidationError } from '../exceptions/validation.error';
-import { NotFoundError } from '../exceptions/not-found.error';
-
-export interface MessageArgsHandler {
-  getMessageArgs(error: Error, request: Request, i18nService: I18nService, baseArgs: Record<string, any>): Record<string, any>;
-}
-
-export interface ErrorHandler {
-  canHandle(error: unknown): boolean;
-  handle(error: unknown, request: Request, i18nService: I18nService, cls: ClsService<ClsStore>): ErrorDto;
-}
+import { MessageArgsHandler } from '../interfaces/message-args-handler.interface';
+import { ErrorHandler } from '../interfaces/error-handler.interface';
 
 class DefaultMessageArgsHandler implements MessageArgsHandler {
   getMessageArgs(error: Error, request: Request, i18nService: I18nService, baseArgs: Record<string, any>): Record<string, any> {
@@ -39,16 +30,16 @@ export abstract class AbstractErrorHandler<T extends Error> implements ErrorHand
     return error instanceof this.errorType;
   }
 
-  handle(error: unknown, request: Request, i18nService: I18nService, cls: ClsService<ClsStore>): ErrorDto {
+  handle(error: unknown, request: Request, i18nService: I18nService, clsService: ClsService<ClsStore>): ErrorResponseDto {
     const typedError = error as T;
     const builder = new ErrorDtoBuilder(request.url)
       .setStatusCode(this.getStatus(typedError))
       .setMessageKey(this.getMessageKey(typedError))
       .setMessage(this.getMessage(typedError, request, i18nService));
 
-    this.customizeBuilder(builder, typedError, request, i18nService, cls);
+    this.customizeErrorDtoBuilder(builder, typedError, request, i18nService, clsService);
     
-    if (typedError instanceof BaseError && typedError.hasSubErrors()) {
+    if (typedError instanceof ApplicationError && typedError.hasSubErrors()) {
       this.handleSubErrors(builder, typedError, request, i18nService);
     }
     
@@ -56,7 +47,7 @@ export abstract class AbstractErrorHandler<T extends Error> implements ErrorHand
   }
 
   protected getStatus(error: T): number {
-    if ((error instanceof BaseError || error instanceof HttpException) && error.getStatus() !== undefined) {
+    if ((error instanceof ApplicationError || error instanceof HttpException) && error.getStatus() !== undefined) {
       return error.getStatus()!;
     }
     return this.defaultStatus;
@@ -73,11 +64,11 @@ export abstract class AbstractErrorHandler<T extends Error> implements ErrorHand
   }
 
   protected getMessageKey(error: T): string {
-    return error instanceof BaseError ? error.getMessageKey() : this.defaultMessageKey;
+    return error instanceof ApplicationError ? error.getMessageKey() : this.defaultMessageKey;
   }
 
   protected getMessageArgs(error: T, request: Request, i18nService: I18nService): Record<string, any> | undefined {
-    if (!(error instanceof BaseError)) {
+    if (!(error instanceof ApplicationError)) {
       return undefined;
     }
 
@@ -89,36 +80,36 @@ export abstract class AbstractErrorHandler<T extends Error> implements ErrorHand
     );
   }
 
-  protected customizeBuilder(
+  protected customizeErrorDtoBuilder(
     builder: ErrorDtoBuilder,
     error: T,
     request: Request,
     i18nService: I18nService,
-    cls: ClsService<ClsStore>
+    clsService: ClsService<ClsStore>
   ): void {}
 
   protected handleSubErrors(
     builder: ErrorDtoBuilder,
-    error: BaseError,
+    error: ApplicationError,
     request: any,
     i18nService: I18nService
   ): void {
-    const subErrors = error.getSubErrors().map(err => {
-      const messageArgs = this.getMessageArgs(err as unknown as T, request, i18nService);
+    const subErrors = error.getSubErrors().map(subError => {
+      const messageArgs = this.getMessageArgs(subError as unknown as T, request, i18nService);
       
-      const subError: SubErrorDto = {
-        messageKey: err.getMessageKey(),
-        message: i18nService.translate(err.getMessageKey(), {
+      const subErrorResponseDto: SubErrorResponseDto = {
+        messageKey: subError.getMessageKey(),
+        message: i18nService.translate(subError.getMessageKey(), {
           lang: request.i18nLang,
           args: messageArgs,
         })
       };
 
-      if (err instanceof ValidationError && err.getFieldName()) {
-        (subError as ValidationErrorDto).fieldName = err.getFieldName();
+      if (subError instanceof ValidationError && subError.getFieldName()) {
+        (subErrorResponseDto as ValidationErrorResponseDto).fieldName = subError.getFieldName();
       }
 
-      return subError;
+      return subErrorResponseDto;
     });
 
     builder.addSubErrors(subErrors);
@@ -126,8 +117,3 @@ export abstract class AbstractErrorHandler<T extends Error> implements ErrorHand
 }
 
 
-export class BaseErrorHandler extends AbstractErrorHandler<BaseError> {
-  constructor() {
-    super(BaseError, ErrorStatus.BAD_REQUEST, ErrorMessages.INTERNAL);
-  }
-}
