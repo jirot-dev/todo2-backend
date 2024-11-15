@@ -3,7 +3,6 @@ import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { Span } from 'nestjs-otel';
 
 import { NotFoundError } from 'src/shared/error-handling/exceptions/not-found.error';
-import { Todo } from '../../../domain/models/todo.model';
 import { TodoRepository } from '../../../infrastructure/repositories/todo.repository';
 import { GetTodoQuery } from './get-todo.query';
 

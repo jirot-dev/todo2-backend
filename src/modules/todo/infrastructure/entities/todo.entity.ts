@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, UpdateDateColumn, CreateDateColumn,  } from 'typeorm';
 
 import { TodoStatus, TodoPriority } from '../../domain/enums/enum';
 
 @Entity('todo')
 export class TodoEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({ type: 'uuid'})
+  id: string;
 
   @Column({ length: 250 })
   title: string;

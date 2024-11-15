@@ -11,6 +11,7 @@ import { DeleteTodoHandler } from './application/commands/delete/delete-todo.han
 import { GetTodoHandler } from './application/queries/get/get-todo.handler';
 import { ListTodosHandler } from './application/queries/list/list-todos.handler';
 import { TodoControllerV1 } from './presentation/v1/controllers/todo.controller';
+import { IdGenerateService } from 'src/shared/core/services/id-generate.service';
 
 
 @Module({
@@ -21,6 +22,7 @@ import { TodoControllerV1 } from './presentation/v1/controllers/todo.controller'
   controllers: [TodoControllerV1],
   providers: [
     DateService,
+    IdGenerateService,
     TodoRepository,
     CreateTodoHandler,
     UpdateTodoHandler,

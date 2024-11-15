@@ -38,13 +38,13 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
     }
 
     @Span('Repository')
-    async delete(id: number): Promise<void> {
+    async delete(id: string): Promise<void> {
         const result = await this.repository.delete(id);
         await this.throwIfNotDeleted(result);
     }
 
     @Span('Repository')
-    async getById(id: number): Promise<Todo | null> {
+    async getById(id: string): Promise<Todo | null> {
         const entity = await this.repository.findOne({ where: { id } });
         return entity ? this.toDomain(entity) : null;
     }

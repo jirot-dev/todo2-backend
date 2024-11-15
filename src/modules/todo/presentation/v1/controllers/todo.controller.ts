@@ -2,9 +2,11 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseInterceptors
 import { ApiTags, ApiOperation, ApiQuery, ApiParam, ApiBody } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { OtelMethodCounter, Span } from 'nestjs-otel';
+import short from 'short-uuid';
 
 import { ContextInterceptor } from 'src/shared/core/interceptors/context.interceptor';
 import { ApiResponses } from 'src/shared/core/decorators/api-responses.decorator';
+import { ToUUID } from 'src/shared/core/decorators/to-uuid.decorator';
 import { CreateTodoCommand } from '../../../application/commands/create/create-todo.command';
 import { UpdateTodoCommand } from '../../../application/commands/update/update-todo.command';
 import { DeleteTodoCommand } from '../../../application/commands/delete/delete-todo.command';
@@ -41,10 +43,10 @@ export class TodoControllerV1 {
   @Span()
   @OtelMethodCounter()
   @ApiOperation({operationId: 'getTodo'})
-  @ApiParam({ name: 'id', type: 'number' })
+  @ApiParam({ name: 'id', type: 'string' })
   @ApiResponses({ type: ResponseTodoDtoV1, successStatus: 200, errorStatus: [404] })
   @Get(':id')
-  async get(@Param('id') id: number) {
+  async get(@ToUUID('id') id: string) {
     const todo = await this.queryBus.execute(new GetTodoQuery(id));
     return ResponseTodoDtoV1.fromDomain(todo);
   }
@@ -71,10 +73,11 @@ export class TodoControllerV1 {
   @Span()
   @OtelMethodCounter()
   @ApiOperation({operationId: 'updateTodo'})
+  @ApiParam({ name: 'id', type: 'string' })
   @ApiBody({ type: UpdateTodoDtoV1 })
   @ApiResponses({ type: ResponseTodoDtoV1, successStatus: 201, errorStatus: [404] })
   @Put(':id')
-  async update(@Param('id') id: number, @Body() dto: UpdateTodoDtoV1) {
+  async update(@ToUUID('id') id: string, @Body() dto: UpdateTodoDtoV1) {
     const command = new UpdateTodoCommand(
       id,
       dto.title,
@@ -91,9 +94,9 @@ export class TodoControllerV1 {
   @Span()
   @OtelMethodCounter()
   @ApiOperation({operationId: 'deleteTodo'})
-  @ApiParam({ name: 'id', type: 'number' })
+  @ApiParam({ name: 'id', type: 'string' })
   @Delete(':id')
-  async delete(@Param('id') id: number) {
+  async delete(@ToUUID('id') id: string) {
     const command = new DeleteTodoCommand(id);
     return await this.commandBus.execute(command);
   }

@@ -1,9 +1,11 @@
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import short from 'short-uuid';
 
 import { TodoStatus, TodoPriority, TodoOrder } from '../../../domain/enums/enum';
 import { Todo } from '../../../domain/models/todo.model';
+
 
 class BaseTodoDtoV1 {
   @ApiProperty()
@@ -78,7 +80,7 @@ export class ListTodoQueryDtoV1 {
 
 export class ResponseTodoDtoV1 {
   @ApiProperty()
-  readonly id: number;
+  readonly id: string;
 
   @ApiProperty()
   readonly title: string;
@@ -114,8 +116,9 @@ export class ResponseTodoDtoV1 {
   readonly modifiedDate: Date;
 
   static fromDomain(domain: Todo): ResponseTodoDtoV1 {
+    const translator = short();
     return {
-      id: domain.id,
+      id: translator.fromUUID(domain.id),
       title: domain.title,
       detail: domain.detail,
       progress: domain.progress,

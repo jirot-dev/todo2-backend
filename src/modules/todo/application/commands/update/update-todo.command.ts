@@ -2,7 +2,7 @@ import { TodoPriority } from '../../../domain/enums/enum';
 
 export class UpdateTodoCommand {
   constructor(
-    public readonly id: number,
+    public readonly id: string,
     public readonly title?: string,
     public readonly detail?: string,
     public readonly progress?: number,

@@ -6,7 +6,7 @@ import { TodoFields } from '../constants/todo-fields.constant';
 import { TodoValidation } from '../constants/todo-validation.constant';
 
 export class Todo {
-    private _id?: number | null;
+    private _id?: string | null;
     private _title: string;
     private _detail?: string | null;
     private _progress: number;
@@ -20,7 +20,7 @@ export class Todo {
     private _modifiedDate?: Date | null;
 
     // Public getters
-    public get id(): number | null | undefined {
+    public get id(): string | null | undefined {
         return this._id;
     }
 
@@ -69,7 +69,7 @@ export class Todo {
     }
 
     // Private setters
-    private set id(value: number | null | undefined) {
+    private set id(value: string | null | undefined) {
         this._id = value;
     }
 
@@ -188,7 +188,7 @@ export class Todo {
         const errors: ValidationError[] = [];
 
         if (!this.title?.trim()) {
-            errors.push(new ValidationError(ErrorMessages.FIELD_REQUIRED, {}, 'todo.title'));
+            errors.push(new ValidationError(ErrorMessages.FIELD_REQUIRED, {}, TodoFields.TITLE));
         }
 
         if (errors.length > 0) {

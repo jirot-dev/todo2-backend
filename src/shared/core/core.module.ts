@@ -10,6 +10,7 @@ import { TerminusModule } from '@nestjs/terminus';
 import { DateService } from './services/date.service';
 import { HealthController } from './controllers/health.controller';
 import { HealthService } from './services/health.service';
+import { IdGenerateService } from './services/id-generate.service';
 
 
 @Module({
@@ -44,7 +45,7 @@ import { HealthService } from './services/health.service';
         }),
     ],
     controllers: [HealthController],
-    providers: [DateService, HealthService],
+    providers: [DateService, IdGenerateService, HealthService],
     exports: []
 })
 export class CoreModule { }
