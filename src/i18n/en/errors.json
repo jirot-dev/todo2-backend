@@ -1,7 +1,11 @@
 {
   "internal": "An internal server error occurred. Please try again later",
   "database": "A database error occurred. Please try again later",
+  "badRequest": "Invalid request. Please check your input and try again",
+  "unauthorized": "Authentication required. Please log in to access this resource",
+  "forbidden": "You do not have permission to access this resource",
   "notFound": "{resource} with ID {id} was not found",
+  "paramNotFound": "Parameter {parameterName} was not found",
   "item": {
     "validation": "Validation errors"
   },

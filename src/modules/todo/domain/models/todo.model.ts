@@ -1,7 +1,7 @@
 import { DateService } from 'src/shared/core/services/date.service';
-import { ValidationError } from 'src/shared/error-handling/exceptions/validation.error';
+import { ErrorMessages } from 'src/shared/core/constants/error.constant';
+import { ValidationError } from 'src/shared/core/exceptions/validation.error';
 import { TodoStatus, TodoPriority } from '../enums/enum';
-import { ErrorMessages } from 'src/shared/error-handling/constants/error.constant';
 import { TodoFields } from '../constants/todo-fields.constant';
 import { TodoValidation } from '../constants/todo-validation.constant';
 

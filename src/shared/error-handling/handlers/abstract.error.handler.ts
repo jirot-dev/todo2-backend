@@ -1,9 +1,9 @@
 import { HttpException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { ClsService, ClsStore } from 'nestjs-cls';
+import { ApplicationError } from 'src/shared/core/exceptions/application.error';
+import { ValidationError } from 'src/shared/core/exceptions/validation.error';
 import { ErrorResponseDto, ErrorDtoBuilder, SubErrorResponseDto, ValidationErrorResponseDto } from '../../core/dtos/error-response.dto';
-import { ApplicationError } from '../exceptions/application.error';
-import { ValidationError } from '../exceptions/validation.error';
 import { MessageArgsHandler } from '../interfaces/message-args-handler.interface';
 import { ErrorHandler } from '../interfaces/error-handler.interface';
 

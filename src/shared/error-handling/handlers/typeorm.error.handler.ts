@@ -1,7 +1,9 @@
 import { TypeORMError } from 'typeorm';
+
+import { ErrorMessages, ErrorStatus } from 'src/shared/core/constants/error.constant';
 import { ErrorDtoBuilder } from '../../core/dtos/error-response.dto';
 import { AbstractErrorHandler } from './abstract.error.handler';
-import { ErrorMessages, ErrorStatus } from '../constants/error.constant';
+
 
 export class TypeORMErrorHandler extends AbstractErrorHandler<TypeORMError> {
   constructor() {

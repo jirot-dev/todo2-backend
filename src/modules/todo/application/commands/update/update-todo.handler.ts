@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Span } from 'nestjs-otel';
 
-import { NotFoundError } from 'src/shared/error-handling/exceptions/not-found.error';
+import { NotFoundError } from 'src/shared/core/exceptions/not-found.error';
 import { Todo } from '../../../domain/models/todo.model';
 import { TodoRepository } from '../../../infrastructure/repositories/todo.repository';
 import { UpdateTodoCommand } from './update-todo.command';

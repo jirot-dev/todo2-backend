@@ -1,6 +1,5 @@
-import { ClsService, ClsStore } from 'nestjs-cls';
 import { DeleteResult, Repository } from 'typeorm';
-import { NotFoundError } from 'src/shared/error-handling/exceptions/not-found.error';
+import { NotFoundError } from 'src/shared/core/exceptions/not-found.error';
 
 export abstract class BaseRepository<T> {
   constructor(

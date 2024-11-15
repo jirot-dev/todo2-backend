@@ -1,9 +1,10 @@
 import { ClsService, ClsStore } from 'nestjs-cls';
 import { I18nService } from 'nestjs-i18n';
-import { NotFoundError } from '../exceptions/not-found.error';
+
+import { ErrorMessages, ErrorStatus } from 'src/shared/core/constants/error.constant';
+import { NotFoundError } from 'src/shared/core/exceptions/not-found.error';
 import { AbstractErrorHandler } from '../handlers/abstract.error.handler';
 import { MessageArgsHandler } from '../interfaces/message-args-handler.interface';
-import { ErrorMessages, ErrorStatus } from '../constants/error.constant';
 
 
 export class NotFoundErrorHandler extends AbstractErrorHandler<NotFoundError> {

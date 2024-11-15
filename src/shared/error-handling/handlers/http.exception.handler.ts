@@ -1,7 +1,9 @@
 import { HttpException } from '@nestjs/common';
+
+import { ErrorMessages, ErrorStatus } from 'src/shared/core/constants/error.constant';
 import { AbstractErrorHandler } from './abstract.error.handler';
 import { ErrorDtoBuilder } from '../../core/dtos/error-response.dto';
-import { ErrorMessages, ErrorStatus } from '../constants/error.constant';
+
 
 export class HttpExceptionHandler extends AbstractErrorHandler<Error> {
   constructor() {
