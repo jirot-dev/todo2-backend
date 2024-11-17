@@ -1,3 +1,4 @@
+import { GenericModel } from 'src/shared/base/domain/models/generic.model';
 import { DateService } from 'src/shared/core/services/date.service';
 import { ErrorMessages } from 'src/shared/core/constants/error.constant';
 import { ValidationError } from 'src/shared/core/exceptions/validation.error';
@@ -5,8 +6,8 @@ import { TodoStatus, TodoPriority } from '../enums/enum';
 import { TodoFields } from '../constants/todo-fields.constant';
 import { TodoValidation } from '../constants/todo-validation.constant';
 
-export class Todo {
-    private _id?: string | null;
+
+export class Todo extends GenericModel<Todo> {
     private _title: string;
     private _detail?: string | null;
     private _progress: number;
@@ -16,14 +17,8 @@ export class Todo {
     private _dueDate?: Date | null;
     private _priority?: TodoPriority | null;
     private _position?: number | null;
-    private _createdDate?: Date | null;
-    private _modifiedDate?: Date | null;
 
     // Public getters
-    public get id(): string | null | undefined {
-        return this._id;
-    }
-
     public get title(): string {
         return this._title;
     }
@@ -60,19 +55,7 @@ export class Todo {
         return this._position;
     }
 
-    public get createdDate(): Date | null | undefined {
-        return this._createdDate;
-    }
-
-    public get modifiedDate(): Date | null | undefined {
-        return this._modifiedDate;
-    }
-
     // Private setters
-    private set id(value: string | null | undefined) {
-        this._id = value;
-    }
-
     private set title(value: string) {
         this._title = value;
     }
@@ -109,15 +92,8 @@ export class Todo {
         this._position = value;
     }
 
-    private set createdDate(value: Date | null | undefined) {
-        this._createdDate = value;
-    }
-
-    private set modifiedDate(value: Date | null | undefined) {
-        this._modifiedDate = value;
-    }
-
     constructor(properties?: Partial<Todo>) {
+        super(properties);
         if (properties) {
             this.merge(properties);
         }
@@ -125,18 +101,7 @@ export class Todo {
 
     public merge(updateValues: Partial<Todo>) {
         this.validateFields(updateValues);
-
-        const updateableKeys = (Object.keys(updateValues) as Array<keyof Todo>)
-            .filter((fieldName): fieldName is keyof Todo => fieldName in this);
-
-
-        updateableKeys.forEach((fieldname) => {
-            const updaeValue = updateValues[fieldname];
-            if (updaeValue !== undefined) {
-                (this as any)[fieldname] = updaeValue;
-            }
-        });
-
+        super.merge(updateValues);
         this.setDefaults();
         this.updateDates();
         this.validateState();
@@ -180,8 +145,8 @@ export class Todo {
             this.endDate = nowUtc;
         }
 
-        this.createdDate = this.createdDate ?? nowUtc;
-        this.modifiedDate = nowUtc;
+        this.createdAt = this.createdAt ?? nowUtc;
+        this.updatedAt = nowUtc;
     }
 
     private validateState(): void {
@@ -202,15 +167,4 @@ export class Todo {
         return TodoStatus.FINISHED;
     }
 
-    public toJson(): Record<string, any> {
-        const propertyMap = new Map(Object.entries(this));
-        const json: Record<string, any> = {};
-
-        for (const [key, value] of propertyMap) {
-            const publicKey = key.replace('_', '');
-            json[publicKey] = value;
-        }
-
-        return json;
-    }
 }

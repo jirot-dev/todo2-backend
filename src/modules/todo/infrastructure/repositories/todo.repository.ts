@@ -3,53 +3,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Span } from 'nestjs-otel';
 
-import { BaseRepository } from 'src/shared/base/repositories/base.repository';
+import { GenericRepository } from 'src/shared/base/infrastructure/repositories/generic.repository';
 import { TodoEntity } from '../entities/todo.entity';
 import { Todo } from '../../domain/models/todo.model';
 import { TodoStatus, TodoPriority, TodoOrder } from '../../domain/enums/enum';
 
 @Injectable()
-export class TodoRepository extends BaseRepository<TodoEntity> {
+@Injectable()
+export class TodoRepository extends GenericRepository<Todo, TodoEntity> {
     constructor(
         @InjectRepository(TodoEntity)
         repository: Repository<TodoEntity>
     ) {
-        super(repository);
+        super(repository, TodoEntity, Todo);
     }
 
-    @Span('Repository')
-    async create(todo: Todo): Promise<Todo> {
-        const entity = this.toEntity(todo);
-        const savedEntity = await this.repository.save(entity);
-        return this.toDomain(savedEntity);
-    }
-
-    @Span('Repository')
-    async update(todo: Todo): Promise<Todo> {
-        const entity = this.toEntity(todo);
-        await this.repository
-            .createQueryBuilder()
-            .update(TodoEntity)
-            .set(entity)
-            .where('id = :id', { id: entity.id })
-            .execute();
-
-        return this.toDomain(await this.repository.findOneBy({ id: entity.id }));
-    }
-
-    @Span('Repository')
-    async delete(id: string): Promise<void> {
-        const result = await this.repository.delete(id);
-        await this.throwIfNotDeleted(result);
-    }
-
-    @Span('Repository')
-    async getById(id: string): Promise<Todo | null> {
-        const entity = await this.repository.findOne({ where: { id } });
-        return entity ? this.toDomain(entity) : null;
-    }
-
-    @Span('Repository')
+    @Span('Repository.List')
     async list(
         status?: TodoStatus,
         orderBy: TodoOrder = TodoOrder.CREATED_DATE,
@@ -63,9 +32,9 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
         }
 
         if (orderBy === TodoOrder.CREATED_DATE) {
-            queryBuilder.orderBy(`todo.createdDate`, 'ASC');
+            queryBuilder.orderBy(`todo.created_at`, 'ASC');
         } else if (orderBy === TodoOrder.DUE_DATE) {
-            queryBuilder.orderBy(`todo.dueDate`, 'ASC').orderBy(`todo.position`, 'ASC');
+            queryBuilder.orderBy(`todo.due_date`, 'ASC').orderBy(`todo.position`, 'ASC');
         } else if (orderBy === TodoOrder.PRIORITY) {
             queryBuilder.orderBy(`todo.priority`, 'DESC').orderBy(`todo.position`, 'ASC');
         }
@@ -81,22 +50,4 @@ export class TodoRepository extends BaseRepository<TodoEntity> {
         };
     }
 
-    @Span('toEntity')
-    private toEntity(domain: Todo): TodoEntity {
-        const entity = new TodoEntity();
-        const json = domain.toJson();
-        (Object.keys(json))
-            .forEach((key) => {
-                const value = json[key];
-                (entity as any)[key] = value;
-            });
-        return entity;
-    }
-
-    @Span('toDomain')
-    private toDomain(entity: TodoEntity): Todo {
-        const todo = new Todo();
-        todo.merge(entity as Partial<Todo>);
-        return todo;
-    }
 }

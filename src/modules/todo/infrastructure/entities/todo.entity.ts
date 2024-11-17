@@ -1,42 +1,35 @@
 import { Entity, Column, PrimaryColumn, UpdateDateColumn, CreateDateColumn,  } from 'typeorm';
 
+import { GenericEntity } from 'src/shared/base/infrastructure/entities/generic.entity';
 import { TodoStatus, TodoPriority } from '../../domain/enums/enum';
 
-@Entity('todo')
-export class TodoEntity {
-  @PrimaryColumn({ type: 'uuid'})
-  id: string;
-
-  @Column({ length: 250 })
+@Entity({ name: 'todo' })
+export class TodoEntity extends GenericEntity<TodoEntity> {
+  @Column({ name: 'title', length: 250 })
   title: string;
 
-  @Column({ length: 2000, nullable: true })
+  @Column({ name: 'detail', length: 2000, nullable: true })
   detail: string;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ name: 'progress', type: 'int', default: 0 })
   progress: number;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ name: 'start_date', type: 'timestamptz', nullable: true })
   startDate: Date;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ name: 'end_date', type: 'timestamptz', nullable: true })
   endDate: Date;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ name: 'status', type: 'int', default: 0 })
   status: TodoStatus;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ name: 'due_date', type: 'date', nullable: true })
   dueDate: Date;
 
-  @Column({ type: 'int', default: 1 })
+  @Column({ name: 'priority', type: 'int', default: 1 })
   priority: TodoPriority;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ name: 'position', type: 'int', nullable: true })
   position: number;
 
-  @CreateDateColumn({ type: 'timestamptz' })
-  createdDate: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz' })
-  modifiedDate: Date;
 }

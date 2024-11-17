@@ -110,10 +110,10 @@ export class ResponseTodoDtoV1 {
   readonly position: number | null;
 
   @ApiProperty()
-  readonly createdDate: Date;
+  readonly createdAt: Date;
 
   @ApiProperty()
-  readonly modifiedDate: Date;
+  readonly updatedAt: Date;
 
   static fromDomain(domain: Todo): ResponseTodoDtoV1 {
     const translator = short();
@@ -128,8 +128,8 @@ export class ResponseTodoDtoV1 {
       dueDate: domain.dueDate,
       priority: domain.priority,
       position: domain.position,
-      createdDate: domain.createdDate,
-      modifiedDate: domain.modifiedDate
+      createdAt: domain.createdAt,
+      updatedAt: domain.updatedAt
     };
   }
 }
