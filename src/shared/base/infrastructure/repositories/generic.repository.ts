@@ -33,6 +33,7 @@ extends BaseRepository<TModel, TEntity> {
     toDomain(entity: TEntity): TModel {
         const model = new this.modelType();
         (model as any).merge?.(entity) ?? Object.assign(model, entity);
+        model.updateTokenPrevious = model.updateToken;
         return model;
     }
 }

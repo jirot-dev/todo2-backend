@@ -7,6 +7,8 @@ export const ErrorMessages = {
     NOT_FOUND: 'errors.notFound',
     PARAM_NOT_FOUND: 'errors.paramNotFound',
     ITEM_VALIDATION: 'errors.item.validation',
+    ITEM_UPDATE_TOKEN: 'errors.item.updateToken',
+    ITEM_UPDATE_LOCK: 'errors.item.updateLock',
     FIELD_REQUIRED: 'errors.field.required',
     FIELD_LENGTH: 'errors.field.length',
     FIELD_RANGE: 'errors.field.range',

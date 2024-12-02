@@ -1,3 +1,4 @@
+import { UpdateValidationMode } from "../enums/update-validation-mode.enum";
 import { IModel } from "./model";
 
 export abstract class BaseModel implements IModel {
@@ -8,6 +9,14 @@ export abstract class BaseModel implements IModel {
     protected _updatedAt?: Date;
     protected _updatedBy?: string;
     protected _updatedById?: string;
+    protected _updateToken?: string;
+    protected _lockedAt?: Date;
+    protected _lockedBy?: string;
+    protected _lockedById?: string;
+    protected _lockedExpired?: Date;
+    protected _updateTokenPrevious?: string;
+    protected _lockedTimeout: number = 30 * 60; // 30 minutes default
+    protected _updateValidationMode: UpdateValidationMode = UpdateValidationMode.No;
 
     public get id(): string | undefined {
         return this._id;
@@ -37,6 +46,39 @@ export abstract class BaseModel implements IModel {
         return this._updatedById;
     }
 
+    
+    public get updateToken(): string | undefined {
+        return this._updateToken;
+    }
+
+    public get lockedAt(): Date | undefined {
+        return this._lockedAt;
+    }
+
+    public get lockedBy(): string | undefined {
+        return this._lockedBy;
+    }
+
+    public get lockedById(): string | undefined {
+        return this._lockedById;
+    }
+
+    public get lockedExpired(): Date | undefined {
+        return this._lockedExpired;
+    }
+
+    public get updateTokenPrevious(): string | undefined {
+        return this._updateTokenPrevious;
+    }
+
+    public get lockedTimeout(): number {
+        return this._lockedTimeout;
+    }
+
+    public get updateValidationMode(): UpdateValidationMode {
+        return this._updateValidationMode;
+    }
+
     protected set id(value: string | undefined) {
         this._id = value;
     }
@@ -63,6 +105,38 @@ export abstract class BaseModel implements IModel {
 
     protected set updatedById(value: string | undefined) {
         this._updatedById = value;
+    }
+
+    protected set updateToken(value: string | undefined) {
+        this._updateToken = value;
+    }
+
+    protected set lockedAt(value: Date | undefined) {
+        this._lockedAt = value;
+    }
+
+    protected set lockedBy(value: string | undefined) {
+        this._lockedBy = value;
+    }
+
+    protected set lockedById(value: string | undefined) {
+        this._lockedById = value;
+    }
+
+    protected set lockedExpired(value: Date | undefined) {
+        this._lockedExpired = value;
+    }
+
+    protected set updateTokenPrevious(value: string | undefined) {
+        this._updateTokenPrevious = value;
+    }
+
+    protected set lockedTimeout(value: number) {
+        this._lockedTimeout = value;
+    }
+
+    protected set updateValidationMode(value: UpdateValidationMode) {
+        this._updateValidationMode = value;
     }
 
     constructor(properties?: Partial<IModel>) {
@@ -94,4 +168,17 @@ export abstract class BaseModel implements IModel {
 
         return json;
     }
+
+    public lock(now: Date): void {
+        this.lockedAt = now;
+        this.lockedExpired = new Date(now.getTime() + (this._lockedTimeout * 10000));
+    }
+
+    public release(): void {
+        this.lockedAt = undefined;
+        this.lockedBy = undefined;
+        this.lockedById = undefined;
+        this.lockedExpired = undefined;
+    }
+
 }

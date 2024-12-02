@@ -7,7 +7,9 @@
     "notFound": "ไม่พบ {resource} ที่มีรหัส {id}",
     "paramNotFound": "ไม่พบ พารามิเตอร์ {parameterName}",
     "item": {
-        "validation": "พบข้อผิดพลาดหลายรายการ"
+        "validation": "พบข้อผิดพลาดหลายรายการ",
+        "updateToken": "รายการถูกแก้ไขโดยผู้ใช้งานอื่น",
+        "updateLock": "รายการถูกจองโดยผู้ใช้งานอื่น"
     },
     "field": {
         "required": "กรุณากรอก{field}",

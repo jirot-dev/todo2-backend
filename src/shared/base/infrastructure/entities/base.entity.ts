@@ -23,4 +23,19 @@ export abstract class BaseEntity implements IEntity {
 
     @Column({ name: 'updated_by_id', type: 'uuid', nullable: true })
     updatedById: string;
+
+    @Column({ name: 'update_token', length: 40, nullable: true })
+    updateToken: string;
+
+    @Column({ name: 'locked_at', type: 'timestamptz', nullable: true })
+    lockedAt?: Date;
+
+    @Column({ name: 'locked_by', length: 100, nullable: true })
+    lockedBy?: string;
+
+    @Column({ name: 'locked_by_id', type: 'uuid', nullable: true })
+    lockedById?: string;
+
+    @Column({ name: 'locked_expired', type: 'timestamptz', nullable: true })
+    lockedExpired?: Date;
 }

@@ -6,4 +6,9 @@ export interface IEntity {
     updatedAt: Date;
     updatedBy: string;
     updatedById: string;
+    updateToken: string;
+    lockedAt?: Date;
+    lockedBy?: string;
+    lockedById?: string;
+    lockedExpired?: Date;
 }

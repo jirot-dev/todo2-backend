@@ -7,7 +7,9 @@
   "notFound": "{resource} with ID {id} was not found",
   "paramNotFound": "Parameter {parameterName} was not found",
   "item": {
-    "validation": "Validation errors"
+    "validation": "Validation errors",
+    "updateToken": "Resource is updated by another user",
+    "updateLock": "Resource is locked by another user"
   },
   "field": {
     "required": "The {field} field is required",
